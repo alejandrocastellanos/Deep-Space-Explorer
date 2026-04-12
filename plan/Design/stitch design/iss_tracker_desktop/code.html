@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ASTRAL MISSION CONTROL - ISS TRACKER</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700;900&amp;family=Space+Mono:wght@400;700&amp;family=Inter:wght@300;400;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "on-tertiary-fixed-variant": "#8f0045",
+                "surface-container-highest": "#353535",
+                "on-secondary-fixed-variant": "#004f53",
+                "on-tertiary-fixed": "#3f001b",
+                "on-tertiary": "#65002f",
+                "secondary-fixed-dim": "#00dce5",
+                "secondary": "#e6feff",
+                "inverse-surface": "#e2e2e2",
+                "secondary-container": "#00f4fe",
+                "outline-variant": "#434652",
+                "tertiary-fixed-dim": "#ffb1c5",
+                "surface-dim": "#131313",
+                "primary": "#b1c5ff",
+                "primary-container": "#0b3d91",
+                "surface": "#131313",
+                "on-secondary-container": "#006c71",
+                "inverse-primary": "#345baf",
+                "on-secondary": "#003739",
+                "on-surface": "#e2e2e2",
+                "on-error-container": "#ffdad6",
+                "on-background": "#e2e2e2",
+                "surface-bright": "#393939",
+                "surface-tint": "#b1c5ff",
+                "on-primary": "#002c71",
+                "tertiary-fixed": "#ffd9e1",
+                "on-surface-variant": "#c4c6d3",
+                "primary-fixed-dim": "#b1c5ff",
+                "on-primary-fixed-variant": "#144296",
+                "tertiary-container": "#860040",
+                "on-secondary-fixed": "#002021",
+                "surface-container-low": "#1b1b1b",
+                "inverse-on-surface": "#303030",
+                "on-primary-container": "#8dadff",
+                "on-error": "#690005",
+                "surface-variant": "#353535",
+                "outline": "#8e909d",
+                "surface-container": "#1f1f1f",
+                "surface-container-lowest": "#0e0e0e",
+                "secondary-fixed": "#63f7ff",
+                "background": "#131313",
+                "error": "#ffb4ab",
+                "error-container": "#93000a",
+                "primary-fixed": "#dae2ff",
+                "tertiary": "#ffb1c5",
+                "on-primary-fixed": "#001947",
+                "on-tertiary-container": "#ff8aad",
+                "surface-container-high": "#2a2a2a"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+            },
+            "fontFamily": {
+                "headline": ["Space Grotesk"],
+                "body": ["Inter"],
+                "label": ["Space Grotesk"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .scanline-overlay {
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+        }
+        .hex-accent {
+            mask-image: radial-gradient(circle at center, black, transparent 80%);
+            background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 0l10 5v10l-10 5-10-5V5z' fill='%2300F4FE' fill-opacity='0.05'/%3E%3C/svg%3E");
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body selection:bg-secondary-container selection:text-on-secondary-container overflow-hidden">
+<!-- TOP NAV BAR -->
+<nav class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-8 h-16 bg-black/40 backdrop-blur-xl border-b border-cyan-500/30 shadow-2xl shadow-cyan-500/10">
+<div class="text-2xl font-black tracking-tighter text-blue-800 dark:text-blue-600 font-headline">ASTRAL_MISSION_CONTROL</div>
+<div class="hidden md:flex space-x-8 items-center">
+<a class="text-slate-400 font-medium pb-1 font-['Space_Grotesk'] tracking-[0.1em] uppercase text-sm hover:text-cyan-300 hover:border-b-2 hover:border-cyan-300 transition-all duration-300" href="#">Home</a>
+<a class="text-slate-400 font-medium pb-1 font-['Space_Grotesk'] tracking-[0.1em] uppercase text-sm hover:text-cyan-300 hover:border-b-2 hover:border-cyan-300 transition-all duration-300" href="#">Explorer</a>
+<a class="text-slate-400 font-medium pb-1 font-['Space_Grotesk'] tracking-[0.1em] uppercase text-sm hover:text-cyan-300 hover:border-b-2 hover:border-cyan-300 transition-all duration-300" href="#">Artemis II</a>
+<a class="text-slate-400 font-medium pb-1 font-['Space_Grotesk'] tracking-[0.1em] uppercase text-sm hover:text-cyan-300 hover:border-b-2 hover:border-cyan-300 transition-all duration-300" href="#">Asteroid Radar</a>
+<a class="text-cyan-400 border-b-2 border-cyan-400 pb-1 font-['Space_Grotesk'] tracking-[0.1em] uppercase text-sm font-bold" href="#">ISS Tracker</a>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-cyan-400 cursor-pointer">account_circle</span>
+</div>
+</nav>
+<!-- SIDE NAV BAR (RIGHT) -->
+<aside class="fixed right-0 top-16 flex flex-col items-center py-8 z-40 bg-[#131313]/80 backdrop-blur-2xl h-[calc(100vh-64px)] w-20 border-l border-cyan-900/30 shadow-[-10px_0_30px_rgba(0,0,0,0.5)]">
+<div class="mb-12 flex flex-col items-center">
+<div class="w-10 h-10 border border-secondary-container p-0.5 rounded-none">
+<img alt="MISSION_PILOT_BIO" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6awSLAMaZSq0Lat7D3RriURruVh8MnnunblSyfg-ZvH_XS3sg7Ux7MzjqhKbHQbp_WIl3O-mrSKLbH2kwrWHb1-mEE0Kwz_aSdbDL00sttKWfemDy_9jQz80sF2eJpWFk57l-PbOw4tjUYz4fKl0oHE7YOq3D0z3K128KP81qTnDnhNPzlBv9010s5Mpbk1DB5Jwl8dvpwu4-wWzHmEkMzNJAB7S1yCHnzifvYjOsIa8JdIV-22BhuWCUJZ637yEFwdJMgRClEYNQ"/>
+</div>
+<div class="mt-2 text-[8px] font-['Space_Mono'] uppercase tracking-widest text-on-surface-variant">SECTOR_V</div>
+</div>
+<div class="flex flex-col gap-8 flex-1">
+<button class="flex flex-col items-center gap-1 group text-cyan-400">
+<span class="material-symbols-outlined text-2xl">satellite_alt</span>
+<span class="font-['Space_Mono'] uppercase tracking-widest text-[8px]">ISS_COORDS</span>
+</button>
+<button class="flex flex-col items-center gap-1 group text-slate-600 hover:text-cyan-600 transition-colors duration-200">
+<span class="material-symbols-outlined text-2xl">warning</span>
+<span class="font-['Space_Mono'] uppercase tracking-widest text-[8px]">ASTEROID_ALERT</span>
+</button>
+</div>
+<div class="mt-auto flex flex-col items-center gap-6">
+<button class="text-slate-600 hover:text-cyan-600 transition-colors duration-200 flex flex-col items-center gap-1">
+<span class="material-symbols-outlined">power_settings_new</span>
+<span class="font-['Space_Mono'] uppercase tracking-widest text-[8px]">LOGOUT</span>
+</button>
+</div>
+</aside>
+<!-- MAIN CONTENT AREA -->
+<main class="pt-16 pr-20 h-screen w-full flex flex-col bg-surface overflow-hidden relative">
+<div class="scanline-overlay absolute inset-0 z-10"></div>
+<!-- MAP SECTION (70% Height) -->
+<section class="h-[70%] w-full relative border-b border-primary-container/20 overflow-hidden">
+<!-- Mock Map Background -->
+<div class="absolute inset-0 bg-[#0a0a0a]" data-location="world map dark" style="">
+<img alt="satellite view of earth at night with dark continents and glowing city lights in CartoDB style" class="w-full h-full object-cover opacity-40 mix-blend-luminosity" data-alt="high contrast satellite imagery of earth at night showing dark ocean expanses and interconnected glowing city networks in electric blue and deep black" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBWirU_KlgGNRXQwKOH2L12kwgFGxWc77rYWs-dfDDcptakGe1wS1z3jEp7btCScNGOcnEhICVqVSLLwBrD6s9JgtvLR7egb6kqwYWowM8Y9PV8pfniDDg0YsX_ZTbtBYmAcExY36n-f-z70uohbM-kelYbym4HhOs25FEYvenUjNMEVA79T9mFFMtag883Rb8vUU6C4PvDI2dN4plKxVLDkrntkbckikFgqqO9HO11sn_vldwLxdflXL5LTy5sW1t2spbmhKs5Lhvv"/>
+<!-- HUD Overlays -->
+<div class="absolute top-8 left-8 z-20 flex items-center gap-3">
+<div class="flex items-center gap-2 bg-black/60 border border-secondary-container/30 px-3 py-1 text-[10px] font-['Space_Mono'] uppercase tracking-widest">
+<span class="w-2 h-2 rounded-full bg-green-500 animate-pulse shadow-[0_0_8px_#22c55e]"></span>
+                        LIVE_FEED
+                    </div>
+<div class="text-[10px] font-['Space_Mono'] uppercase tracking-widest text-on-surface-variant bg-black/60 border border-white/10 px-3 py-1">
+                        ORBITAL_VELOCITY: 7.66 km/s
+                    </div>
+</div>
+<!-- ISS Satellite Marker -->
+<div class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30">
+<div class="relative">
+<!-- Pulsing Ring -->
+<div class="absolute inset-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 rounded-full border border-secondary-container/40 animate-ping"></div>
+<div class="absolute inset-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 rounded-full border border-secondary-container/10 animate-ping duration-1000"></div>
+<!-- Satellite Icon -->
+<div class="relative w-8 h-8 bg-black border border-secondary-container flex items-center justify-center shadow-[0_0_20px_rgba(0,244,254,0.4)]">
+<span class="material-symbols-outlined text-secondary-container text-xl" style="font-variation-settings: 'FILL' 1;">satellite</span>
+</div>
+<!-- Label -->
+<div class="absolute top-10 left-1/2 -translate-x-1/2 whitespace-nowrap">
+<span class="font-['Space_Mono'] text-[10px] text-secondary-container bg-black/80 px-2 py-0.5 border-l-2 border-secondary-container">ISS_ZARYA_CLUSTER</span>
+</div>
+</div>
+</div>
+<!-- Grid Overlay -->
+<div class="absolute inset-0 pointer-events-none" style="background-image: linear-gradient(rgba(0, 244, 254, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 244, 254, 0.05) 1px, transparent 1px); background-size: 100px 100px;"></div>
+</div>
+</section>
+<!-- DATA PANELS (30% Height) -->
+<section class="h-[30%] w-full grid grid-cols-3 gap-0 bg-surface-container-low p-6">
+<!-- Panel 1: LATITUDE -->
+<div class="relative border-r border-primary-container/20 group flex flex-col justify-between p-4 overflow-hidden">
+<div class="hex-accent absolute inset-0 opacity-10"></div>
+<div>
+<div class="flex items-center gap-2 mb-1">
+<span class="material-symbols-outlined text-xs text-secondary-container">explore</span>
+<h3 class="font-['Space_Mono'] text-xs uppercase tracking-[0.2em] text-on-surface-variant">LATITUDE_READOUT</h3>
+</div>
+<div class="text-5xl font-['Space_Mono'] font-bold text-secondary-container tracking-tighter">
+                        +51.2483<span class="text-2xl opacity-50 ml-1">°N</span>
+</div>
+</div>
+<div class="flex justify-between items-end">
+<div class="text-[9px] font-['Space_Mono'] text-on-tertiary-container uppercase">SENSOR_RELIABILITY: 99.8%</div>
+<div class="w-12 h-1 border-b border-l border-secondary-container/40"></div>
+</div>
+</div>
+<!-- Panel 2: LONGITUDE -->
+<div class="relative border-r border-primary-container/20 group flex flex-col justify-between p-4 overflow-hidden">
+<div class="hex-accent absolute inset-0 opacity-10"></div>
+<div>
+<div class="flex items-center gap-2 mb-1">
+<span class="material-symbols-outlined text-xs text-secondary-container">language</span>
+<h3 class="font-['Space_Mono'] text-xs uppercase tracking-[0.2em] text-on-surface-variant">LONGITUDE_READOUT</h3>
+</div>
+<div class="text-5xl font-['Space_Mono'] font-bold text-secondary-container tracking-tighter">
+                        -0.1278<span class="text-2xl opacity-50 ml-1">°W</span>
+</div>
+</div>
+<div class="flex justify-between items-end">
+<div class="text-[9px] font-['Space_Mono'] text-on-surface-variant uppercase">REF: PRIME_MERIDIAN</div>
+<div class="w-12 h-1 border-b border-l border-secondary-container/40"></div>
+</div>
+</div>
+<!-- Panel 3: LAST UPDATE -->
+<div class="relative group flex flex-col justify-between p-4 overflow-hidden">
+<div class="hex-accent absolute inset-0 opacity-10"></div>
+<div>
+<div class="flex items-center gap-2 mb-1">
+<span class="material-symbols-outlined text-xs text-secondary-container">update</span>
+<h3 class="font-['Space_Mono'] text-xs uppercase tracking-[0.2em] text-on-surface-variant">LAST_SYNC_PROTOCOL</h3>
+</div>
+<div class="text-5xl font-['Space_Mono'] font-bold text-secondary-container tracking-tighter">
+                        14:22:09<span class="text-2xl opacity-50 ml-1">UTC</span>
+</div>
+</div>
+<div class="flex justify-between items-end">
+<div class="text-[9px] font-['Space_Mono'] text-on-surface-variant uppercase">ENCRYPTION: AES-256_ACTIVE</div>
+<button class="bg-primary-container text-secondary text-[10px] font-['Space_Mono'] uppercase tracking-widest px-4 py-2 hover:bg-secondary-container hover:text-on-secondary transition-all active:opacity-70">
+                        REFRESH_DATA
+                    </button>
+</div>
+</div>
+</section>
+<!-- HUD Brackets Corners -->
+<div class="fixed top-20 left-4 w-4 h-4 border-t-2 border-l-2 border-secondary-container opacity-40 z-50"></div>
+<div class="fixed bottom-4 left-4 w-4 h-4 border-b-2 border-l-2 border-secondary-container opacity-40 z-50"></div>
+<div class="fixed top-20 right-24 w-4 h-4 border-t-2 border-r-2 border-secondary-container opacity-40 z-50"></div>
+<div class="fixed bottom-4 right-24 w-4 h-4 border-b-2 border-r-2 border-secondary-container opacity-40 z-50"></div>
+</main>
+</body></html>

@@ -1,0 +1,66 @@
+============================================================
+PLAN ESTRATÉGICO DE APIS: PROYECTO NOVAVIEW
+============================================================
+
+1. NASA API (El Núcleo)
+------------------------------------------------------------
+- Propósito: Contenido visual, misión Artemis y asteroides.
+- Auth: Requiere API_KEY (X-Api-Key header o query param).
+- Endpoints Clave:
+    * APOD: https://api.nasa.gov/planetary/apod
+    * Búsqueda: https://images-api.nasa.gov/search?q={query}
+    * Asteroides: https://api.nasa.gov/neo/rest/v1/feed
+- Uso en NovaView: Fondo dinámico de la Home, sección Artemis II y el Radar de objetos cercanos.
+
+2. SPACEX API (La Actualidad)
+------------------------------------------------------------
+- Propósito: Lanzamientos en tiempo real y cohetes.
+- Auth: No requiere (Open Source).
+- Endpoints Clave:
+    * Próximos Lanzamientos: https://api.spacexdata.com/v4/launches/upcoming
+    * Último Lanzamiento: https://api.spacexdata.com/v4/launches/latest
+- Uso en NovaView: Sección "Launchpad" con tarjetas informativas sobre los próximos vuelos de Falcon 9 y Starship.
+
+3. OPEN NOTIFY (Presencia Humana)
+------------------------------------------------------------
+- Propósito: Seguimiento de la ISS y personas en órbita.
+- Auth: No requiere.
+- Endpoints Clave:
+    * Posición ISS: http://api.open-notify.org/iss-now.json
+    * Humanos en el espacio: http://api.open-notify.org/astros.json
+- Uso en NovaView: Widget en el Navbar que muestra el número actual de astronautas y un mapa interactivo con la trayectoria de la estación.
+
+4. SOLAR SYSTEM OPEN DATA (Ciencia Planetaria)
+------------------------------------------------------------
+- Propósito: Datos físicos y comparativos de cuerpos celestes.
+- Auth: No requiere.
+- Endpoints Clave:
+    * Todos los cuerpos: https://api.le-systeme-solaire.net/rest/bodies/
+- Uso en NovaView: Sección "Planetary Lab" para comparar masa, gravedad y lunas de los planetas del sistema solar.
+
+============================================================
+ESTRATEGIA DE IMPLEMENTACIÓN EN REACT
+============================================================
+
+FASE A: CENTRALIZACIÓN DE SERVICIOS
+- Crear 'src/services/apiClient.js' con instancias separadas de Axios.
+- Instancia A (NASA): Configurada con baseURL y API_KEY.
+- Instancia B (Genérica): Para SpaceX y APIs abiertas.
+
+FASE B: GESTIÓN DE ESTADO (React Query)
+- Cachear los datos de SpaceX por 1 hora.
+- No cachear la posición de la ISS (refresco cada 5-10 segundos).
+- Cachear el APOD de la NASA por 24 horas.
+
+FASE C: UI/UX (Glassmorphism)
+- Fondo: Negro profundo (#000000).
+- Contenedores: bg-white/10 con backdrop-blur-md.
+- Acentos: Azul NASA (#0B3D91) y Blanco Estelar (#F5F5F5).
+
+============================================================
+REGLAS PARA WINDSURF / AGENTE
+============================================================
+- Utilizar componentes funcionales con Hooks.
+- Implementar skeletons de carga específicos para cada API.
+- Validar siempre la existencia de 'links' y 'media_url' antes de renderizar imágenes.
+============================================================

@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&amp;family=Space+Mono:wght@400;700&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary-fixed-variant": "#8f0045",
+                    "surface-container-highest": "#353535",
+                    "on-secondary-fixed-variant": "#004f53",
+                    "on-tertiary-fixed": "#3f001b",
+                    "on-tertiary": "#65002f",
+                    "secondary-fixed-dim": "#00dce5",
+                    "secondary": "#e6feff",
+                    "inverse-surface": "#e2e2e2",
+                    "secondary-container": "#00f4fe",
+                    "outline-variant": "#434652",
+                    "tertiary-fixed-dim": "#ffb1c5",
+                    "surface-dim": "#131313",
+                    "primary": "#b1c5ff",
+                    "primary-container": "#0b3d91",
+                    "surface": "#131313",
+                    "on-secondary-container": "#006c71",
+                    "inverse-primary": "#345baf",
+                    "on-secondary": "#003739",
+                    "on-surface": "#e2e2e2",
+                    "on-error-container": "#ffdad6",
+                    "on-background": "#e2e2e2",
+                    "surface-bright": "#393939",
+                    "surface-tint": "#b1c5ff",
+                    "on-primary": "#002c71",
+                    "tertiary-fixed": "#ffd9e1",
+                    "on-surface-variant": "#c4c6d3",
+                    "primary-fixed-dim": "#b1c5ff",
+                    "on-primary-fixed-variant": "#144296",
+                    "tertiary-container": "#860040",
+                    "on-secondary-fixed": "#002021",
+                    "surface-container-low": "#1b1b1b",
+                    "inverse-on-surface": "#303030",
+                    "on-primary-container": "#8dadff",
+                    "on-error": "#690005",
+                    "surface-variant": "#353535",
+                    "outline": "#8e909d",
+                    "surface-container": "#1f1f1f",
+                    "surface-container-lowest": "#0e0e0e",
+                    "secondary-fixed": "#63f7ff",
+                    "background": "#131313",
+                    "error": "#ffb4ab",
+                    "error-container": "#93000a",
+                    "primary-fixed": "#dae2ff",
+                    "tertiary": "#ffb1c5",
+                    "on-primary-fixed": "#001947",
+                    "on-tertiary-container": "#ff8aad",
+                    "surface-container-high": "#2a2a2a"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0px",
+                    "lg": "0px",
+                    "xl": "0px",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Space Grotesk"],
+                    "body": ["Inter"],
+                    "label": ["Space Mono"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #000000;
+            background-image: radial-gradient(circle at 50% 50%, #0b3d9115 0%, transparent 80%),
+                              linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 100% 100%, 40px 40px, 40px 40px;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 244, 254, 0.2);
+        }
+        .hud-bracket-tl { border-top: 2px solid #00f4fe; border-left: 2px solid #00f4fe; width: 10px; height: 10px; position: absolute; top: 0; left: 0; }
+        .hud-bracket-tr { border-top: 2px solid #00f4fe; border-right: 2px solid #00f4fe; width: 10px; height: 10px; position: absolute; top: 0; right: 0; }
+        .hud-bracket-bl { border-bottom: 2px solid #00f4fe; border-left: 2px solid #00f4fe; width: 10px; height: 10px; position: absolute; bottom: 0; left: 0; }
+        .hud-bracket-br { border-bottom: 2px solid #00f4fe; border-right: 2px solid #00f4fe; width: 10px; height: 10px; position: absolute; bottom: 0; right: 0; }
+        
+        .flicker-hover:active { animation: flicker 0.2s ease; }
+        @keyframes flicker {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body class="text-on-surface font-body min-h-screen">
+<!-- TopNavBar -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-8 h-16 bg-black/40 backdrop-blur-xl border-b border-cyan-500/30 shadow-[0_1px_0_0_rgba(0,244,254,0.3)] shadow-2xl shadow-cyan-500/10">
+<div class="flex items-center gap-4">
+<span class="text-2xl font-black tracking-tighter text-blue-800 dark:text-blue-600 font-headline">ASTRAL_MISSION_CONTROL</span>
+</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="font-['Space_Grotesk'] tracking-[0.1em] uppercase text-sm font-bold text-slate-400 font-medium pb-1 hover:text-cyan-300 hover:border-b-2 hover:border-cyan-300 transition-all duration-300" href="#">Home</a>
+<a class="font-['Space_Grotesk'] tracking-[0.1em] uppercase text-sm font-bold text-cyan-400 border-b-2 border-cyan-400 pb-1" href="#">Explorer</a>
+<a class="font-['Space_Grotesk'] tracking-[0.1em] uppercase text-sm font-bold text-slate-400 font-medium pb-1 hover:text-cyan-300 hover:border-b-2 hover:border-cyan-300 transition-all duration-300" href="#">Artemis II</a>
+<a class="font-['Space_Grotesk'] tracking-[0.1em] uppercase text-sm font-bold text-slate-400 font-medium pb-1 hover:text-cyan-300 hover:border-b-2 hover:border-cyan-300 transition-all duration-300" href="#">Asteroid Radar</a>
+<a class="font-['Space_Grotesk'] tracking-[0.1em] uppercase text-sm font-bold text-slate-400 font-medium pb-1 hover:text-cyan-300 hover:border-b-2 hover:border-cyan-300 transition-all duration-300" href="#">ISS Tracker</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-cyan-400 hover:scale-110 transition-transform">account_circle</button>
+</div>
+</header>
+<!-- SideNavBar -->
+<aside class="fixed right-0 top-16 flex flex-col items-center py-8 z-40 bg-[#131313]/80 backdrop-blur-2xl h-[calc(100vh-64px)] w-20 border-l border-cyan-900/30 shadow-[-10px_0_30px_rgba(0,0,0,0.5)]">
+<div class="mb-8 flex flex-col items-center gap-1">
+<div class="w-10 h-10 bg-primary-container border border-secondary-container/30 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary-container text-xl">person_filled</span>
+</div>
+<span class="font-['Space_Mono'] uppercase tracking-widest text-[8px] text-on-surface-variant">SECTOR_V</span>
+</div>
+<div class="flex-1 flex flex-col gap-6">
+<button class="flex flex-col items-center gap-1 text-slate-600 hover:text-cyan-600 hover:bg-blue-900/20 transition-colors p-2 rounded">
+<span class="material-symbols-outlined">satellite_alt</span>
+<span class="font-['Space_Mono'] uppercase tracking-widest text-[8px]">ISS_COORDS</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-slate-600 hover:text-cyan-600 hover:bg-blue-900/20 transition-colors p-2 rounded">
+<span class="material-symbols-outlined">warning</span>
+<span class="font-['Space_Mono'] uppercase tracking-widest text-[8px]">ASTEROID_ALERT</span>
+</button>
+</div>
+<div class="mt-auto flex flex-col gap-6">
+<button class="flex flex-col items-center gap-1 text-slate-600 hover:text-cyan-600 hover:bg-blue-900/20 transition-colors p-2 rounded">
+<span class="material-symbols-outlined text-error">power_settings_new</span>
+<span class="font-['Space_Mono'] uppercase tracking-widest text-[8px]">LOGOUT</span>
+</button>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="pt-24 pb-12 pr-28 pl-12 min-h-screen max-w-7xl mx-auto">
+<!-- Header & Search Section -->
+<section class="mb-12">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-10">
+<div class="space-y-2">
+<span class="font-label text-secondary-container text-xs tracking-[0.2em]">MISSION_LOG // DATA_RETRIEVAL</span>
+<h1 class="text-5xl font-headline font-bold uppercase tracking-tight text-on-surface">Deep Space Explorer</h1>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative group">
+<div class="hud-bracket-tl"></div><div class="hud-bracket-tr"></div>
+<div class="hud-bracket-bl"></div><div class="hud-bracket-br"></div>
+<div class="flex items-center bg-surface-container-low px-4 py-3 gap-3 border border-secondary-container/10 focus-within:border-secondary-container/60 transition-all duration-300 w-full md:w-80 shadow-[0_0_15px_rgba(0,244,254,0.05)] focus-within:shadow-[0_0_20px_rgba(0,244,254,0.15)]">
+<span class="material-symbols-outlined text-secondary-container/50">search</span>
+<input class="bg-transparent border-none outline-none text-sm font-label uppercase tracking-widest text-on-surface placeholder:text-on-surface-variant/30 w-full" placeholder="QUERY_SATELLITE_DATABASE..." type="text"/>
+<span class="material-symbols-outlined text-on-surface-variant/30 cursor-pointer hover:text-error transition-colors text-lg">close</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Segmented Control Filters -->
+<div class="flex items-center gap-px bg-surface-container-highest/20 p-1 border border-outline-variant/30 w-fit">
+<button class="px-6 py-2 bg-secondary-container text-on-secondary-container font-label text-[10px] tracking-widest font-bold uppercase shadow-[0_0_15px_rgba(0,244,254,0.3)]">All</button>
+<button class="px-6 py-2 hover:bg-surface-container-high text-on-surface-variant font-label text-[10px] tracking-widest uppercase transition-colors">Images</button>
+<button class="px-6 py-2 hover:bg-surface-container-high text-on-surface-variant font-label text-[10px] tracking-widest uppercase transition-colors">Videos</button>
+</div>
+</section>
+<!-- Media Grid (3 Columns) -->
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<!-- Card 1 -->
+<div class="group relative bg-surface-container glass-panel p-4 flex flex-col h-[480px] transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_0_30px_rgba(0,244,254,0.2)] hover:border-secondary-container/50 overflow-hidden">
+<div class="relative h-[70%] overflow-hidden mb-6">
+<img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" data-alt="High definition capture of a vibrant nebula with swirling clouds of cosmic dust in deep blue and violet tones, dotted with bright stars" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDx0FcsqrQZtFkyPcsyifChrcQCZE4j7aQATsp5YLlzy5urN_lltsHAgi6SRaYPBZOpPW-nMVO0Mt11mRqCJxWjn3QK9NP2duQfCTiXAvOQ7zczO2aGbjKY2t9udQwh7Oh9d6JnNDYhQZZbwyiE9AhOJr-zEf-y2X8GtKLs5DThsOtoLiBs2m1NUNsSt9g7ImT8GRLO472ocGZZlJaGTIIaX8rDbgHjZmTquY9szznJitPEzvY0KkGYNLC9QcRCaTwSeIuekv5htzal"/>
+<div class="absolute top-4 right-4 z-10">
+<span class="bg-secondary-container/20 text-secondary-container px-3 py-1 font-label text-[10px] tracking-[0.15em] border border-secondary-container/40">IMAGE</span>
+</div>
+<!-- Hover Description Overlay -->
+<div class="absolute inset-0 bg-black/80 p-8 flex flex-col justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+<p class="text-secondary-container font-label text-xs mb-4 tracking-widest">// RAW_DATA_DESCRIPTION</p>
+<p class="text-on-surface-variant text-sm leading-relaxed">Multispectral analysis reveals heavy concentration of ionized hydrogen within the central core. Scanning for potential planetary formations.</p>
+</div>
+</div>
+<div class="flex-1 flex flex-col">
+<div class="flex justify-between items-start mb-2">
+<h3 class="text-xl font-headline font-bold text-on-surface group-hover:text-secondary-container transition-colors">ORION_NEBULA_RECON_VII</h3>
+<button class="material-symbols-outlined text-on-surface-variant/40 hover:text-tertiary transition-colors">favorite</button>
+</div>
+<p class="font-label text-xs text-on-surface-variant/60 tracking-[0.1em] uppercase">Captured: 2024-05-12 // 12:44:00_UTC</p>
+<div class="mt-auto pt-4 border-t border-outline-variant/20 flex justify-between items-center">
+<span class="text-[10px] font-label text-on-tertiary-container">L-LEVEL: CRITICAL</span>
+<span class="material-symbols-outlined text-on-surface-variant/30 text-sm">more_horiz</span>
+</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="group relative bg-surface-container glass-panel p-4 flex flex-col h-[480px] transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_0_30px_rgba(134,0,64,0.2)] hover:border-tertiary-container/50 overflow-hidden">
+<div class="relative h-[70%] overflow-hidden mb-6">
+<img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" data-alt="Dramatic surface view of an asteroid with jagged dark rock textures and harsh shadows, illuminated by distant sunlight in black space" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDhtSfjIAD-2maAAvpXFhPHPiNKBVt8asj0PufxT3_YOiaDJG_ALPOiaG1zU51hCzhWCh3jEruu5fHOSH8KzhdA70SIJvx7Mn0BCEOHEWb-iexKkojqVL8cEJDqQ9BaWEA2zQ3i24paKoAxwoZDWVi89SZ2IudoeGO2mBK1_xyW7VmFqjTQy8Fxul0I-ai4HQff_mhY_UTuAibbi6VGM3PPdOxmTBhjyhwZSfyLaeNlR9BKia68DfVx27nNfcpx-RCUthNBl44oazLr"/>
+<div class="absolute top-4 right-4 z-10">
+<span class="bg-tertiary-container/20 text-tertiary-container px-3 py-1 font-label text-[10px] tracking-[0.15em] border border-tertiary-container/40">VIDEO</span>
+</div>
+<div class="absolute inset-0 bg-black/80 p-8 flex flex-col justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+<p class="text-tertiary-container font-label text-xs mb-4 tracking-widest">// RAW_DATA_DESCRIPTION</p>
+<p class="text-on-surface-variant text-sm leading-relaxed">Time-lapse trajectory tracking of rogue asteroid 2023-XB9. Surface composition confirms high ferrous content. Rotational speed increasing.</p>
+</div>
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="w-16 h-16 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/20 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-white text-3xl" data-weight="fill">play_arrow</span>
+</div>
+</div>
+</div>
+<div class="flex-1 flex flex-col">
+<div class="flex justify-between items-start mb-2">
+<h3 class="text-xl font-headline font-bold text-on-surface group-hover:text-tertiary transition-colors">ASTEROID_XB9_TRAJECTORY</h3>
+<button class="material-symbols-outlined text-tertiary transition-colors" style="font-variation-settings: 'FILL' 1;">favorite</button>
+</div>
+<p class="font-label text-xs text-on-surface-variant/60 tracking-[0.1em] uppercase">Recorded: 2024-03-29 // 04:12:15_UTC</p>
+<div class="mt-auto pt-4 border-t border-outline-variant/20 flex justify-between items-center">
+<span class="text-[10px] font-label text-on-tertiary-container">L-LEVEL: SECURE</span>
+<span class="material-symbols-outlined text-on-surface-variant/30 text-sm">more_horiz</span>
+</div>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="group relative bg-surface-container glass-panel p-4 flex flex-col h-[480px] transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_0_30px_rgba(0,244,254,0.2)] hover:border-secondary-container/50 overflow-hidden">
+<div class="relative h-[70%] overflow-hidden mb-6">
+<img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" data-alt="Satellite view of Earth from orbit with the bright blue horizon of the atmosphere and detailed cloud patterns against deep black space" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCvzDAGSxAI_Z7BSFo5lh5clQw03wpXWDN5HAMIWXMC5hGA2Mz_o-E78IYM7vxLO8FkwZUapQ109q1f6ABpVEGvEiefTndbiX4GhEajx3ZozyfnU1siQkCob6riLuyW1vBsMa6iZvKa8-UTz3vTvo4y633GqUWusNOfFnq9scGqCtJebAEYfUvUcXNz5oq7xHsoGz3ICbLQo7uDgRey4p0O0GD-bfP8VrjIftwKB3dfbfFfrA8J1dyCXIZyL9KVtxUiWSDIih3vlQP6"/>
+<div class="absolute top-4 right-4 z-10">
+<span class="bg-secondary-container/20 text-secondary-container px-3 py-1 font-label text-[10px] tracking-[0.15em] border border-secondary-container/40">IMAGE</span>
+</div>
+<div class="absolute inset-0 bg-black/80 p-8 flex flex-col justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+<p class="text-secondary-container font-label text-xs mb-4 tracking-widest">// RAW_DATA_DESCRIPTION</p>
+<p class="text-on-surface-variant text-sm leading-relaxed">Earth-side telemetry verification. Atmosphere opacity within nominal parameters. Cloud formations over sector 7 indicate cyclone development.</p>
+</div>
+</div>
+<div class="flex-1 flex flex-col">
+<div class="flex justify-between items-start mb-2">
+<h3 class="text-xl font-headline font-bold text-on-surface group-hover:text-secondary-container transition-colors">PLANETARY_TELEM_22A</h3>
+<button class="material-symbols-outlined text-on-surface-variant/40 hover:text-tertiary transition-colors">favorite</button>
+</div>
+<p class="font-label text-xs text-on-surface-variant/60 tracking-[0.1em] uppercase">Captured: 2024-06-01 // 23:59:01_UTC</p>
+<div class="mt-auto pt-4 border-t border-outline-variant/20 flex justify-between items-center">
+<span class="text-[10px] font-label text-on-tertiary-container">L-LEVEL: PUBLIC</span>
+<span class="material-symbols-outlined text-on-surface-variant/30 text-sm">more_horiz</span>
+</div>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="group relative bg-surface-container glass-panel p-4 flex flex-col h-[480px] transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_0_30px_rgba(0,244,254,0.2)] hover:border-secondary-container/50 overflow-hidden">
+<div class="relative h-[70%] overflow-hidden mb-6">
+<img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" data-alt="Space shuttle launch at night with massive fire and smoke plumes glowing orange and yellow against the dark sky" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCMeyGbjBKXpyHRlGgy001Yp-9pngw52gkHRwJrD3L0wUnjK83tCyEJAGfFFZU6e9bG0Xp0_GUQW6JgozfsBI3dMlbtxvHfkhYyA82MnOqRjGrKObBQ7LDsXh-T3bAL85pDUXg6DWfhdozRfJjOYqOdvA3223Aq9SUDUaIC7mQ3Eln6aiwjdYs2sZHZ4XRjX9I11vW8Fvho0LBTChQc9VHT0hL24XxJ623uJwYfuw6Fsbz81idxs9icB52u4SIQawsEUVWozhPuKkrV"/>
+<div class="absolute top-4 right-4 z-10">
+<span class="bg-secondary-container/20 text-secondary-container px-3 py-1 font-label text-[10px] tracking-[0.15em] border border-secondary-container/40">IMAGE</span>
+</div>
+<div class="absolute inset-0 bg-black/80 p-8 flex flex-col justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+<p class="text-secondary-container font-label text-xs mb-4 tracking-widest">// RAW_DATA_DESCRIPTION</p>
+<p class="text-on-surface-variant text-sm leading-relaxed">Ignition sequence confirmed. Propulsion systems operating at 104% capacity. Thermal shields holding. All telemetry systems are green.</p>
+</div>
+</div>
+<div class="flex-1 flex flex-col">
+<div class="flex justify-between items-start mb-2">
+<h3 class="text-xl font-headline font-bold text-on-surface group-hover:text-secondary-container transition-colors">IGNITION_SEQ_TX01</h3>
+<button class="material-symbols-outlined text-on-surface-variant/40 hover:text-tertiary transition-colors">favorite</button>
+</div>
+<p class="font-label text-xs text-on-surface-variant/60 tracking-[0.1em] uppercase">Captured: 2024-05-20 // 10:00:12_UTC</p>
+<div class="mt-auto pt-4 border-t border-outline-variant/20 flex justify-between items-center">
+<span class="text-[10px] font-label text-on-tertiary-container">L-LEVEL: HISTORIC</span>
+<span class="material-symbols-outlined text-on-surface-variant/30 text-sm">more_horiz</span>
+</div>
+</div>
+</div>
+<!-- Card 5 (Video Example) -->
+<div class="group relative bg-surface-container glass-panel p-4 flex flex-col h-[480px] transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_0_30px_rgba(134,0,64,0.2)] hover:border-tertiary-container/50 overflow-hidden">
+<div class="relative h-[70%] overflow-hidden mb-6">
+<img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" data-alt="Close up of an astronaut helmet reflecting the vastness of space and a distant satellite with cold blue lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCV8gXMZPcBGRUldng5xBYobj8lAPLVdWLrmLqYvK9oN2AdU_6iDVzRd3RtIxPXtMr1svVukUaGXKxeuqWPyYQWeYWuYKIm3EFc28WO1_Kurgh6snyy1w4yQ31hl87p2CXQJ7vCAOffVQAjF4LCuFAGP_pswIOVX5YxzQMMyU3-Dy8YzqSStxwrOAhS4QQJWUFOUnfR9LhLkq6Kr7k5T_hWplrHLSQsjHiVszyAuS6W_ZZdNNHZ35SoQerXjAlnJz6s4wNvcMiNpkVa"/>
+<div class="absolute top-4 right-4 z-10">
+<span class="bg-tertiary-container/20 text-tertiary-container px-3 py-1 font-label text-[10px] tracking-[0.15em] border border-tertiary-container/40">VIDEO</span>
+</div>
+<div class="absolute inset-0 bg-black/80 p-8 flex flex-col justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+<p class="text-tertiary-container font-label text-xs mb-4 tracking-widest">// RAW_DATA_DESCRIPTION</p>
+<p class="text-on-surface-variant text-sm leading-relaxed">EVA operation 44. Pilot perspective. Critical diagnostic performed on auxiliary solar panels. Minimal radiation exposure reported.</p>
+</div>
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="w-16 h-16 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/20 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-white text-3xl" data-weight="fill">play_circle</span>
+</div>
+</div>
+</div>
+<div class="flex-1 flex flex-col">
+<div class="flex justify-between items-start mb-2">
+<h3 class="text-xl font-headline font-bold text-on-surface group-hover:text-tertiary transition-colors">EVA_PILOT_CAM_S44</h3>
+<button class="material-symbols-outlined text-on-surface-variant/40 hover:text-tertiary transition-colors">favorite</button>
+</div>
+<p class="font-label text-xs text-on-surface-variant/60 tracking-[0.1em] uppercase">Recorded: 2024-04-14 // 14:22:55_UTC</p>
+<div class="mt-auto pt-4 border-t border-outline-variant/20 flex justify-between items-center">
+<span class="text-[10px] font-label text-on-tertiary-container">L-LEVEL: CLASSIFIED</span>
+<span class="material-symbols-outlined text-on-surface-variant/30 text-sm">more_horiz</span>
+</div>
+</div>
+</div>
+<!-- Card 6 -->
+<div class="group relative bg-surface-container glass-panel p-4 flex flex-col h-[480px] transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_0_30px_rgba(0,244,254,0.2)] hover:border-secondary-container/50 overflow-hidden">
+<div class="relative h-[70%] overflow-hidden mb-6">
+<img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" data-alt="Spiral galaxy with millions of distant stars and a bright glowing center, captured with cosmic depth and rich dark tones" src="https://lh3.googleusercontent.com/aida-public/AB6AXuByN-dYmhTCJ9jw1kz1f_U7yT9b7HvsKyKtYQVXIcAOUTeyUTaMSaR7QUJ__HE5GJXX5fRAs2w-GKIkGNiCXIf9XKielMmDqXJOkuOMnvvCoVsfzTkJY4rqt8N4RHHKq2BYiDoSfoPk7oek86ghMBCyZXJA7aUyOMLw8Z0JWZEU_Zb5ylh7l0kuQoWbrKkyk_4YpigUEjvvRDYzPRK5ZC-uSxH2xZMcIK5pOFAk_V8Auk4AeoDl-NW8fTsCvcavNRukNkgA78QfDO0N"/>
+<div class="absolute top-4 right-4 z-10">
+<span class="bg-secondary-container/20 text-secondary-container px-3 py-1 font-label text-[10px] tracking-[0.15em] border border-secondary-container/40">IMAGE</span>
+</div>
+<div class="absolute inset-0 bg-black/80 p-8 flex flex-col justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+<p class="text-secondary-container font-label text-xs mb-4 tracking-widest">// RAW_DATA_DESCRIPTION</p>
+<p class="text-on-surface-variant text-sm leading-relaxed">Deep field scan 889-Z. Andromeda periphery analysis. Gravitational lensing detected on sector 4 quadrant. Re-calculating distance markers.</p>
+</div>
+</div>
+<div class="flex-1 flex flex-col">
+<div class="flex justify-between items-start mb-2">
+<h3 class="text-xl font-headline font-bold text-on-surface group-hover:text-secondary-container transition-colors">DEEP_FIELD_SCAN_889Z</h3>
+<button class="material-symbols-outlined text-on-surface-variant/40 hover:text-tertiary transition-colors">favorite</button>
+</div>
+<p class="font-label text-xs text-on-surface-variant/60 tracking-[0.1em] uppercase">Captured: 2024-05-30 // 02:11:10_UTC</p>
+<div class="mt-auto pt-4 border-t border-outline-variant/20 flex justify-between items-center">
+<span class="text-[10px] font-label text-on-tertiary-container">L-LEVEL: PUBLIC</span>
+<span class="material-symbols-outlined text-on-surface-variant/30 text-sm">more_horiz</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Technical Metadata Footer -->
+<footer class="mt-16 pt-8 border-t border-cyan-900/30 flex flex-col md:flex-row justify-between items-center gap-6">
+<div class="flex items-center gap-6">
+<div class="flex flex-col">
+<span class="text-[10px] font-label text-on-surface-variant/40 tracking-[0.2em] uppercase">Buffer Status</span>
+<div class="w-32 h-1 bg-surface-container-highest mt-1 relative overflow-hidden">
+<div class="absolute top-0 left-0 h-full w-[88%] bg-secondary-container"></div>
+</div>
+</div>
+<div class="flex flex-col">
+<span class="text-[10px] font-label text-on-surface-variant/40 tracking-[0.2em] uppercase">Signal Strength</span>
+<span class="text-secondary-container font-label text-xs mt-1">94.3 dBm // STABLE</span>
+</div>
+</div>
+<div class="text-[10px] font-label text-on-surface-variant/30 tracking-[0.3em] uppercase">
+                © 2024 ASTRAL MISSION CONTROL // ALL RIGHTS RESERVED
+            </div>
+</footer>
+</main>
+<!-- Overlay Scanline Texture -->
+<div class="fixed inset-0 pointer-events-none opacity-[0.03] z-[100]" style="background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06)); background-size: 100% 2px, 3px 100%;"></div>
+</body></html>

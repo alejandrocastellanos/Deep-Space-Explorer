@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ARTEMIS II MISSION CONTROL</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800;900&amp;family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "on-tertiary-fixed-variant": "#8f0045",
+                "surface-container-highest": "#353535",
+                "on-secondary-fixed-variant": "#004f53",
+                "on-tertiary-fixed": "#3f001b",
+                "on-tertiary": "#65002f",
+                "secondary-fixed-dim": "#00dce5",
+                "secondary": "#e6feff",
+                "inverse-surface": "#e2e2e2",
+                "secondary-container": "#00f4fe",
+                "outline-variant": "#434652",
+                "tertiary-fixed-dim": "#ffb1c5",
+                "surface-dim": "#131313",
+                "primary": "#b1c5ff",
+                "primary-container": "#0b3d91",
+                "surface": "#131313",
+                "on-secondary-container": "#006c71",
+                "inverse-primary": "#345baf",
+                "on-secondary": "#003739",
+                "on-surface": "#e2e2e2",
+                "on-error-container": "#ffdad6",
+                "on-background": "#e2e2e2",
+                "surface-bright": "#393939",
+                "surface-tint": "#b1c5ff",
+                "on-primary": "#002c71",
+                "tertiary-fixed": "#ffd9e1",
+                "on-surface-variant": "#c4c6d3",
+                "primary-fixed-dim": "#b1c5ff",
+                "on-primary-fixed-variant": "#144296",
+                "tertiary-container": "#860040",
+                "on-secondary-fixed": "#002021",
+                "surface-container-low": "#1b1b1b",
+                "inverse-on-surface": "#303030",
+                "on-primary-container": "#8dadff",
+                "on-error": "#690005",
+                "surface-variant": "#353535",
+                "outline": "#8e909d",
+                "surface-container": "#1f1f1f",
+                "surface-container-lowest": "#0e0e0e",
+                "secondary-fixed": "#63f7ff",
+                "background": "#131313",
+                "error": "#ffb4ab",
+                "error-container": "#93000a",
+                "primary-fixed": "#dae2ff",
+                "tertiary": "#ffb1c5",
+                "on-primary-fixed": "#001947",
+                "on-tertiary-container": "#ff8aad",
+                "surface-container-high": "#2a2a2a"
+            },
+            "borderRadius": {
+                "DEFAULT": "0rem",
+                "lg": "0rem",
+                "xl": "0rem",
+                "full": "9999px"
+            },
+            "fontFamily": {
+                "headline": ["Space Grotesk"],
+                "body": ["Inter"],
+                "label": ["Space Mono"]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .scanline {
+            background: linear-gradient(to bottom, rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+        }
+        .hexagon-clip {
+            clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+        }
+        .glass-panel {
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 220, 229, 0.2);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-black text-on-surface font-body selection:bg-secondary-container selection:text-on-secondary-container overflow-x-hidden">
+<!-- HUD Overlay Scanlines -->
+<div class="fixed inset-0 z-50 scanline opacity-20 pointer-events-none"></div>
+<!-- Top Navigation Bar -->
+<nav class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-6 h-16 bg-black/40 backdrop-blur-xl border-b border-cyan-500/30 shadow-[0_1px_0_0_rgba(0,244,254,0.3)]">
+<div class="text-2xl font-black tracking-tighter text-blue-800 dark:text-blue-600 font-headline">ASTRAL</div>
+<div class="hidden md:flex items-center space-x-6">
+<a class="text-slate-400 font-medium pb-1 font-['Space_Grotesk'] tracking-[0.1em] uppercase text-sm hover:text-cyan-300 hover:border-b-2 hover:border-cyan-300 transition-all duration-300" href="#">Home</a>
+<a class="text-slate-400 font-medium pb-1 font-['Space_Grotesk'] tracking-[0.1em] uppercase text-sm hover:text-cyan-300 hover:border-b-2 hover:border-cyan-300 transition-all duration-300" href="#">Explorer</a>
+<a class="text-cyan-400 border-b-2 border-cyan-400 pb-1 font-['Space_Grotesk'] tracking-[0.1em] uppercase text-sm" href="#">Artemis II</a>
+<a class="text-slate-400 font-medium pb-1 font-['Space_Grotesk'] tracking-[0.1em] uppercase text-sm hover:text-cyan-300 hover:border-b-2 hover:border-cyan-300 transition-all duration-300" href="#">Asteroid Radar</a>
+</div>
+<div class="flex items-center">
+<span class="material-symbols-outlined text-cyan-400 text-3xl">account_circle</span>
+</div>
+</nav>
+<!-- Side Navigation (Mobile Hidden Icons Desktop Rail) -->
+<aside class="fixed right-0 top-16 hidden md:flex flex-col items-center py-8 z-40 bg-[#131313]/80 backdrop-blur-2xl h-[calc(100vh-64px)] w-20 border-l border-cyan-900/30 shadow-[-10px_0_30px_rgba(0,0,0,0.5)]">
+<div class="flex flex-col items-center gap-8">
+<div class="flex flex-col items-center gap-1 group cursor-pointer">
+<div class="p-3 bg-blue-900/40 text-cyan-400 border-r-2 border-cyan-400">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">satellite_alt</span>
+</div>
+<span class="font-['Space_Mono'] uppercase tracking-widest text-[8px] text-cyan-400">COORDS</span>
+</div>
+<div class="flex flex-col items-center gap-1 group cursor-pointer">
+<div class="p-3 text-slate-600 group-hover:text-cyan-600 transition-colors">
+<span class="material-symbols-outlined">warning</span>
+</div>
+<span class="font-['Space_Mono'] uppercase tracking-widest text-[8px] text-slate-600 group-hover:text-cyan-600">ALERT</span>
+</div>
+</div>
+<div class="mt-auto pb-6">
+<span class="material-symbols-outlined text-slate-600 hover:text-error transition-colors cursor-pointer">power_settings_new</span>
+</div>
+</aside>
+<!-- Main Mission Canvas -->
+<main class="pt-16 pb-24 md:pr-20 min-h-screen">
+<!-- Cinematic Banner -->
+<section class="relative h-[530px] w-full overflow-hidden">
+<img class="absolute inset-0 w-full h-full object-cover grayscale brightness-50" data-alt="cinematic wide shot of the moon's surface with Orion spacecraft in orbit, high contrast black and white with subtle blue glow" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBxIKaTddjgd3Aau6F0H5Sqr38FhGwK4R7KqjIOEqxxGJ6HscSIRtABvkwy1AE5vppemAJtk1iK5weobSae2yMrAWJjlc56Q5bi6kr5JbEeW4J01p1i4MYMKSbtCUtrnkNibOY9F96wG8_uSgEdH26xvwcLQo3fFVnQ_QfGIozCl54pSZytVNqn-BO2V9wJLdIreE5LKxu3XKAMOeVuXD6RXTpwJEdvuxU7GRkxdTVleOILJdS_OJL6nf3JHz28hEZkCZLSOounNB4L"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent"></div>
+<div class="absolute bottom-12 left-6 right-6">
+<div class="flex flex-col gap-2">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 bg-secondary-container animate-pulse"></div>
+<span class="font-label text-secondary-container tracking-widest text-xs uppercase">TRANSMISSION_LIVE</span>
+</div>
+<h1 class="font-headline text-5xl md:text-8xl font-black tracking-tighter leading-none text-on-surface">
+                        ARTEMIS II<br/>
+<span class="text-outline-variant opacity-50" style="-webkit-text-stroke: 1px #e2e2e2; color: transparent;">MISSION_RECAP</span>
+</h1>
+<div class="mt-4 flex gap-4">
+<div class="border-l-2 border-secondary-container pl-4">
+<p class="font-label text-[10px] text-on-surface-variant uppercase">DEPARTURE_VECTOR</p>
+<p class="font-headline text-xl font-bold uppercase">LUNAR_ORBITAL_INSERTION</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Corner Brackets Decorative -->
+<div class="absolute top-8 left-6 w-8 h-8 border-t-2 border-l-2 border-secondary-container/40"></div>
+<div class="absolute bottom-8 right-6 w-8 h-8 border-b-2 border-r-2 border-secondary-container/40"></div>
+</section>
+<!-- Mission Controls Filter -->
+<div class="px-6 -mt-8 relative z-10">
+<div class="glass-panel bg-surface-container p-4 flex gap-2 overflow-x-auto no-scrollbar">
+<button class="px-6 py-2 bg-secondary-container text-on-secondary-container font-label text-xs uppercase font-bold flex-shrink-0">ALL_SYSTEMS</button>
+<button class="px-6 py-2 bg-surface-container-highest border border-secondary/20 text-on-surface-variant font-label text-xs uppercase flex-shrink-0 hover:bg-secondary/10 transition-colors">TRAJECTORY</button>
+<button class="px-6 py-2 bg-surface-container-highest border border-secondary/20 text-on-surface-variant font-label text-xs uppercase flex-shrink-0 hover:bg-secondary/10 transition-colors">TELEMETRY</button>
+<button class="px-6 py-2 bg-surface-container-highest border border-secondary/20 text-on-surface-variant font-label text-xs uppercase flex-shrink-0 hover:bg-secondary/10 transition-colors">OPTICS</button>
+</div>
+</div>
+<!-- Vertical Mission Timeline -->
+<section class="px-6 py-12">
+<div class="flex items-center justify-between mb-8">
+<h2 class="font-headline text-2xl font-extrabold tracking-widest uppercase text-primary">MISSION_TIMELINE</h2>
+<span class="font-label text-[10px] text-on-surface-variant tracking-tighter">REF: T-MINUS 12:44:00</span>
+</div>
+<div class="relative space-y-12">
+<!-- Vertical Line -->
+<div class="absolute left-6 top-2 bottom-2 w-px bg-gradient-to-b from-primary-container via-secondary-container to-transparent opacity-30"></div>
+<!-- Timeline Item 1 -->
+<div class="relative flex items-start pl-14 group">
+<div class="absolute left-2.5 top-0 w-8 h-8 bg-surface-container hexagon-clip border border-secondary-container flex items-center justify-center z-10">
+<span class="material-symbols-outlined text-secondary-container text-sm">rocket_launch</span>
+</div>
+<div class="glass-panel bg-surface-container-low p-6 w-full group-hover:bg-surface-container transition-all">
+<div class="flex justify-between items-start mb-2">
+<span class="font-label text-[10px] text-secondary-container tracking-widest uppercase">STAGE_01: ASCENT</span>
+<span class="font-label text-[10px] text-on-surface-variant">T+00:00:00</span>
+</div>
+<h3 class="font-headline text-lg font-bold uppercase mb-2">Trans-Lunar Injection</h3>
+<p class="text-sm text-on-surface-variant leading-relaxed">Engine burn initiated. SLS Core Stage successfully separated. Velocity nominal for lunar trajectory.</p>
+</div>
+</div>
+<!-- Timeline Item 2 -->
+<div class="relative flex items-start pl-14 group">
+<div class="absolute left-2.5 top-0 w-8 h-8 bg-surface-container-highest hexagon-clip border border-on-surface-variant/30 flex items-center justify-center z-10">
+<span class="material-symbols-outlined text-on-surface-variant text-sm">public</span>
+</div>
+<div class="glass-panel bg-surface-container-low p-6 w-full border-primary-container/20">
+<div class="flex justify-between items-start mb-2">
+<span class="font-label text-[10px] text-primary tracking-widest uppercase">STAGE_02: COAST</span>
+<span class="font-label text-[10px] text-on-surface-variant">T+02:45:00</span>
+</div>
+<h3 class="font-headline text-lg font-bold uppercase mb-2">High Earth Orbit Maneuver</h3>
+<p class="text-sm text-on-surface-variant leading-relaxed">Orion capsule entering elliptical parking orbit. Solar arrays deployed. Power levels at 100%.</p>
+<div class="mt-4 grid grid-cols-2 gap-2">
+<img class="w-full h-24 object-cover border border-secondary/10" data-alt="satellite view of earth atmosphere with visible curve and deep blue colors, high resolution space photography" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBqwKjZm4CgFNdIdLYMtYarGNnZbE66MgVFZhzA5g21pnRmVLDvbDjvkm2_4wg4uQZ9psEyfwy9YoAd43WzCJ7C-KOkjd7UCDlGcw40JG91ypsEq8Yt8XoVZbBIPL243ouJN6DS0UPvNAN45lDHOgMbUQwgvThJTivYkr4JMLWsTyFjl7qDxivHnwouGn-4aljpVDeYz4brSgnO5BMe6l66uACH2xjEqljJqjSBReyIDk78iEg7uzsmAiCYZXLWaZ3S0fwZTf671YHJ"/>
+<div class="bg-black/60 flex flex-col justify-center items-center border border-secondary/10 px-2">
+<span class="font-label text-[10px] text-cyan-400">APOGEE</span>
+<span class="font-headline text-sm font-bold tracking-tighter">74,230 KM</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Timeline Item 3 (Current Active) -->
+<div class="relative flex items-start pl-14">
+<div class="absolute left-2 top-0 w-9 h-9 bg-primary-container hexagon-clip border-2 border-secondary-container shadow-[0_0_15px_rgba(0,244,254,0.4)] flex items-center justify-center z-10">
+<span class="material-symbols-outlined text-white text-base">near_me</span>
+</div>
+<div class="glass-panel bg-surface-container-highest p-6 w-full border-secondary-container/50">
+<div class="flex justify-between items-start mb-2">
+<span class="font-label text-[10px] text-secondary-container tracking-widest uppercase flex items-center gap-1">
+<span class="w-1 h-1 bg-secondary-container animate-ping inline-block rounded-full"></span> ACTIVE_STAGE
+                            </span>
+<span class="font-label text-[10px] text-on-surface">IN_PROGRESS</span>
+</div>
+<h3 class="font-headline text-lg font-bold uppercase mb-2 text-secondary-container">Lunar Flyby Phase</h3>
+<p class="text-sm text-on-surface leading-relaxed">Atmospheric scrubbers activated for transition. Crew monitoring optical navigation systems.</p>
+<div class="mt-4 flex gap-2 overflow-x-auto no-scrollbar">
+<div class="p-3 bg-black/40 border border-secondary/20 flex-shrink-0 flex flex-col items-center min-w-[80px]">
+<span class="font-label text-[8px] opacity-50">O2_LEVEL</span>
+<span class="font-headline font-bold">98.4%</span>
+</div>
+<div class="p-3 bg-black/40 border border-secondary/20 flex-shrink-0 flex flex-col items-center min-w-[80px]">
+<span class="font-label text-[8px] opacity-50">RAD_SHIELD</span>
+<span class="font-headline font-bold text-success">NOMINAL</span>
+</div>
+<div class="p-3 bg-black/40 border border-secondary/20 flex-shrink-0 flex flex-col items-center min-w-[80px]">
+<span class="font-label text-[8px] opacity-50">H2O_RES</span>
+<span class="font-headline font-bold">120L</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Media Grid (Filtered Content) -->
+<section class="px-6 py-8">
+<div class="mb-6 flex flex-col gap-1">
+<h2 class="font-headline text-xl font-bold uppercase">MISSION_RECORDS</h2>
+<div class="w-12 h-1 bg-secondary-container"></div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- Media Card 1 -->
+<div class="relative aspect-video overflow-hidden group">
+<img class="w-full h-full object-cover grayscale transition-transform duration-700 group-hover:scale-110" data-alt="interior of futuristic spacecraft cockpit with various screens displaying orbital data and green text, high contrast lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBbjBY5k_Ww3fmPWFsGauKPpbTlVM_akIzpl7Ycbd1Txbtl-iCaltaeDqvCH2Xw_KpH-CWTxIMr0qVHYou4YmEpRsU_GleXJ9g3ltlhLJqRu3oyqlKyhYKa0nusLcKj7AcQwkvze5V0xxvc3ildQazTx2vXNiFs3_Vic-jKr9n98-lv_L8bGh_ODZVcxcxAEcyaYtyAGa9DgP9iyY80_Mz7WJF4T4_zXl-HjPYEsXBtTtuf0pt7TtnJN1Z37eBAjOfl0sjb6RdBaykU"/>
+<div class="absolute inset-0 bg-black/60 group-hover:bg-black/20 transition-all"></div>
+<div class="absolute top-4 right-4">
+<span class="material-symbols-outlined text-secondary-container">videocam</span>
+</div>
+<div class="absolute bottom-4 left-4 right-4">
+<p class="font-label text-[10px] text-secondary-container">ORBITAL_CAM_01</p>
+<h4 class="font-headline text-sm font-bold uppercase">Cockpit Diagnostics - Flight Stage 1</h4>
+</div>
+</div>
+<!-- Media Card 2 -->
+<div class="relative aspect-video overflow-hidden group">
+<img class="w-full h-full object-cover grayscale transition-transform duration-700 group-hover:scale-110" data-alt="stunning view of the moon surface with dramatic shadows and deep craters, glowing blue highlights in corners" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDm6QKLL5KcpPNRKF6NF1Vr_EAhdeb38bG0s3ronR9mHQQN0XvwiWf4SgZh0nC71I8lSpF47R0i5SxZb4Tp7-v-DKvUL4yYOjhKBTefYcFdDdUrC1jSIw6-KdEHacPP3AYai83M6FOWgLS4MsajJhCDVhYaOjGubM6S7QAxDABMVC7snZwqahtoRfS7Lfx-hnGxoV1B2n-yxlJ0l0Dxfdjk7g8tSGTw4Ffy_Qqn5uQ3gjssRaSxopQGrslzeylBOT5uhPLDxVt7j_Vz"/>
+<div class="absolute inset-0 bg-black/60 group-hover:bg-black/20 transition-all"></div>
+<div class="absolute top-4 right-4">
+<span class="material-symbols-outlined text-secondary-container">photo_library</span>
+</div>
+<div class="absolute bottom-4 left-4 right-4">
+<p class="font-label text-[10px] text-secondary-container">OPTICAL_NAV_FEED</p>
+<h4 class="font-headline text-sm font-bold uppercase">Lunar Far Side Observation</h4>
+</div>
+</div>
+</div>
+</section>
+<!-- Footer / Mission Summary -->
+<footer class="px-6 py-12 border-t border-secondary/10 bg-surface-container-lowest">
+<div class="grid grid-cols-2 gap-8 mb-8">
+<div>
+<h5 class="font-label text-[10px] text-on-surface-variant uppercase mb-4">CREW_MANIFEST</h5>
+<ul class="space-y-2 text-xs font-headline font-bold uppercase">
+<li class="flex items-center gap-2"><span class="w-1.5 h-1.5 bg-secondary-container"></span> REID WISEMAN</li>
+<li class="flex items-center gap-2"><span class="w-1.5 h-1.5 bg-secondary-container"></span> VICTOR GLOVER</li>
+<li class="flex items-center gap-2"><span class="w-1.5 h-1.5 bg-secondary-container"></span> CHRISTINA KOCH</li>
+<li class="flex items-center gap-2"><span class="w-1.5 h-1.5 bg-secondary-container"></span> JEREMY HANSEN</li>
+</ul>
+</div>
+<div class="flex flex-col items-end text-right">
+<h5 class="font-label text-[10px] text-on-surface-variant uppercase mb-4">SYSTEM_STATUS</h5>
+<div class="text-xs font-label">
+<p class="text-secondary-container">UPLINK: ACTIVE [99.2%]</p>
+<p>LATENCY: 1.254s</p>
+<p class="text-on-surface-variant mt-2">ID: AST-2-SEC5-HUD</p>
+</div>
+</div>
+</div>
+<div class="text-center">
+<p class="font-label text-[8px] tracking-[0.3em] uppercase text-on-surface-variant opacity-30">© 2024 ASTRAL MISSION CONTROL | ALL_DATA_CLASSIFIED</p>
+</div>
+</footer>
+</main>
+<!-- Bottom Navigation Bar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 h-16 bg-black/80 backdrop-blur-xl flex justify-around items-center border-t border-cyan-500/20 px-6">
+<a class="flex flex-col items-center gap-1 text-slate-400" href="#">
+<span class="material-symbols-outlined text-2xl">home</span>
+<span class="font-label text-[8px] uppercase">HOME</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400" href="#">
+<span class="material-symbols-outlined text-2xl">explore</span>
+<span class="font-label text-[8px] uppercase">EXPLORE</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-cyan-400" href="#">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">rocket_launch</span>
+<span class="font-label text-[8px] uppercase">ARTEMIS</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400" href="#">
+<span class="material-symbols-outlined text-2xl">radar</span>
+<span class="font-label text-[8px] uppercase">RADAR</span>
+</a>
+</nav>
+<!-- Floating Action Button - Critical Diagnostic -->
+<button class="fixed bottom-20 right-6 z-50 w-14 h-14 bg-primary-container text-secondary-container flex items-center justify-center border-2 border-secondary-container shadow-[0_0_20px_rgba(0,244,254,0.3)] group">
+<span class="material-symbols-outlined text-3xl group-active:animate-pulse">terminal</span>
+</button>
+</body></html>

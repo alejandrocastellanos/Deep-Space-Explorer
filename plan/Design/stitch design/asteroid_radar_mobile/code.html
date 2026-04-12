@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ASTRAL_MISSION_CONTROL - Asteroid Radar</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;900&amp;family=Space+Mono:wght@400;700&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-tertiary-fixed-variant": "#8f0045",
+                      "surface-container-highest": "#353535",
+                      "on-secondary-fixed-variant": "#004f53",
+                      "on-tertiary-fixed": "#3f001b",
+                      "on-tertiary": "#65002f",
+                      "secondary-fixed-dim": "#00dce5",
+                      "secondary": "#e6feff",
+                      "inverse-surface": "#e2e2e2",
+                      "secondary-container": "#00f4fe",
+                      "outline-variant": "#434652",
+                      "tertiary-fixed-dim": "#ffb1c5",
+                      "surface-dim": "#131313",
+                      "primary": "#b1c5ff",
+                      "primary-container": "#0b3d91",
+                      "surface": "#131313",
+                      "on-secondary-container": "#006c71",
+                      "inverse-primary": "#345baf",
+                      "on-secondary": "#003739",
+                      "on-surface": "#e2e2e2",
+                      "on-error-container": "#ffdad6",
+                      "on-background": "#e2e2e2",
+                      "surface-bright": "#393939",
+                      "surface-tint": "#b1c5ff",
+                      "on-primary": "#002c71",
+                      "tertiary-fixed": "#ffd9e1",
+                      "on-surface-variant": "#c4c6d3",
+                      "primary-fixed-dim": "#b1c5ff",
+                      "on-primary-fixed-variant": "#144296",
+                      "tertiary-container": "#860040",
+                      "on-secondary-fixed": "#002021",
+                      "surface-container-low": "#1b1b1b",
+                      "inverse-on-surface": "#303030",
+                      "on-primary-container": "#8dadff",
+                      "on-error": "#690005",
+                      "surface-variant": "#353535",
+                      "outline": "#8e909d",
+                      "surface-container": "#1f1f1f",
+                      "surface-container-lowest": "#0e0e0e",
+                      "secondary-fixed": "#63f7ff",
+                      "background": "#131313",
+                      "error": "#ffb4ab",
+                      "error-container": "#93000a",
+                      "primary-fixed": "#dae2ff",
+                      "tertiary": "#ffb1c5",
+                      "on-primary-fixed": "#001947",
+                      "on-tertiary-container": "#ff8aad",
+                      "surface-container-high": "#2a2a2a"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "fontFamily": {
+                      "headline": ["Space Grotesk"],
+                      "body": ["Inter"],
+                      "label": ["Space Grotesk"]
+              }
+            },
+          }
+        }
+      </script>
+<style>
+        body {
+            background-color: #000000;
+            color: #e2e2e2;
+            font-family: 'Inter', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .scanline {
+            background: linear-gradient(to bottom, transparent 50%, rgba(0, 244, 254, 0.05) 50%);
+            background-size: 100% 4px;
+        }
+        .grid-overlay {
+            background-image: linear-gradient(rgba(0, 244, 254, 0.1) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(0, 244, 254, 0.1) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+        .radar-circle {
+            border: 1px solid rgba(0, 244, 254, 0.2);
+            border-radius: 50%;
+        }
+        .hud-bracket-tl { border-top: 2px solid #00F4FE; border-left: 2px solid #00F4FE; width: 12px; height: 12px; position: absolute; top: 0; left: 0; }
+        .hud-bracket-tr { border-top: 2px solid #00F4FE; border-right: 2px solid #00F4FE; width: 12px; height: 12px; position: absolute; top: 0; right: 0; }
+        .hud-bracket-bl { border-bottom: 2px solid #00F4FE; border-left: 2px solid #00F4FE; width: 12px; height: 12px; position: absolute; bottom: 0; left: 0; }
+        .hud-bracket-br { border-bottom: 2px solid #00F4FE; border-right: 2px solid #00F4FE; width: 12px; height: 12px; position: absolute; bottom: 0; right: 0; }
+      </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="min-h-screen overflow-x-hidden selection:bg-secondary-container selection:text-on-secondary-container">
+<!-- Global Scanline Overlay -->
+<div class="fixed inset-0 pointer-events-none scanline z-[60]"></div>
+<!-- TopNavBar -->
+<nav class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-8 h-16 bg-black/40 backdrop-blur-xl border-b border-cyan-500/30 shadow-[0_1px_0_0_rgba(0,244,254,0.3)] shadow-2xl shadow-cyan-500/10">
+<div class="text-2xl font-black tracking-tighter text-blue-800 dark:text-blue-600 font-['Space_Grotesk']">
+            ASTRAL_MISSION_CONTROL
+        </div>
+<div class="hidden md:flex space-x-8 items-center h-full">
+<a class="text-slate-400 font-medium pb-1 font-['Space_Grotesk'] tracking-[0.1em] uppercase text-sm hover:text-cyan-300 hover:border-b-2 hover:border-cyan-300 transition-all duration-300" href="#">Home</a>
+<a class="text-slate-400 font-medium pb-1 font-['Space_Grotesk'] tracking-[0.1em] uppercase text-sm hover:text-cyan-300 hover:border-b-2 hover:border-cyan-300 transition-all duration-300" href="#">Explorer</a>
+<a class="text-slate-400 font-medium pb-1 font-['Space_Grotesk'] tracking-[0.1em] uppercase text-sm hover:text-cyan-300 hover:border-b-2 hover:border-cyan-300 transition-all duration-300" href="#">Artemis II</a>
+<a class="text-cyan-400 border-b-2 border-cyan-400 pb-1 font-['Space_Grotesk'] tracking-[0.1em] uppercase text-sm" href="#">Asteroid Radar</a>
+<a class="text-slate-400 font-medium pb-1 font-['Space_Grotesk'] tracking-[0.1em] uppercase text-sm hover:text-cyan-300 hover:border-b-2 hover:border-cyan-300 transition-all duration-300" href="#">ISS Tracker</a>
+</div>
+<div class="flex items-center">
+<span class="material-symbols-outlined text-cyan-400" data-icon="account_circle">account_circle</span>
+</div>
+</nav>
+<!-- SideNavBar (Sector V) -->
+<aside class="fixed right-0 top-16 hidden md:flex flex-col items-center py-8 z-40 bg-[#131313]/80 backdrop-blur-2xl h-[calc(100vh-64px)] w-20 border-l border-cyan-900/30 shadow-[-10px_0_30px_rgba(0,0,0,0.5)]">
+<div class="mb-10 text-center">
+<div class="w-10 h-10 border border-cyan-500/30 p-0.5 mb-2">
+<img class="w-full h-full object-cover" data-alt="portrait of a futuristic spaceship pilot with high-tech HUD interface reflecting in their dark visor" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBWmkj8PSLL6nuuz7CepCYgHVDWj2v75wAcAd2oty9puzAN9aZcv8O4b5zA_f9eTxupjHEDt6g0LQLHY75ORwbsYBa7MyXwW-2BLUGpzPl9Wukdx-7tpibc_8VwB16RhrCgEZPTnooU1URkKKjlVtWtwfKdnZLcNRWuO7YgnqO99Ulqgi0DTsZ8s-y6gIOtCBg8zwyGPfh3wg0aHOgu_kht9725W9WUxfxcBz_XoSXaCBwBHs8euGNVyrkqrw7SSeN2NoMQWEjsaGwg"/>
+</div>
+<p class="font-['Space_Mono'] uppercase tracking-widest text-[8px] text-cyan-400">PILOT_V</p>
+</div>
+<div class="flex flex-col gap-6 flex-1">
+<button class="flex flex-col items-center gap-1 group">
+<span class="material-symbols-outlined text-slate-600 group-hover:text-cyan-600 transition-colors" data-icon="satellite_alt">satellite_alt</span>
+<span class="font-['Space_Mono'] uppercase tracking-widest text-[10px] text-slate-600">ISS_COORDS</span>
+</button>
+<button class="flex flex-col items-center gap-1 group bg-blue-900/40 text-cyan-400 border-r-2 border-cyan-400 px-2 py-4">
+<span class="material-symbols-outlined" data-icon="warning">warning</span>
+<span class="font-['Space_Mono'] uppercase tracking-widest text-[10px]">ASTEROID_ALERT</span>
+</button>
+</div>
+<div class="mt-auto">
+<button class="flex flex-col items-center gap-1 text-slate-600 hover:text-cyan-600">
+<span class="material-symbols-outlined" data-icon="power_settings_new">power_settings_new</span>
+<span class="font-['Space_Mono'] uppercase tracking-widest text-[10px]">LOGOUT</span>
+</button>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="pt-24 pb-24 md:pb-8 px-4 md:pr-28 md:pl-12 min-h-screen">
+<!-- Radar Visual Header -->
+<div class="relative w-full aspect-square max-w-md mx-auto mb-12 bg-surface-container-lowest border border-cyan-900/20 overflow-hidden">
+<div class="absolute inset-0 grid-overlay opacity-30"></div>
+<!-- Rotating Scan Line -->
+<div class="absolute top-1/2 left-1/2 w-[200%] h-0.5 bg-gradient-to-r from-transparent via-cyan-400 to-transparent -translate-x-1/2 -translate-y-1/2 origin-center animate-[spin_4s_linear_infinite]"></div>
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="radar-circle w-[90%] h-[90%] flex items-center justify-center">
+<div class="radar-circle w-[70%] h-[70%] flex items-center justify-center">
+<div class="radar-circle w-[40%] h-[40%] flex items-center justify-center">
+<div class="w-2 h-2 bg-cyan-400 shadow-[0_0_15px_#00F4FE] rounded-full"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Asteroid Pings -->
+<div class="absolute top-[20%] left-[30%] group">
+<div class="w-1.5 h-1.5 bg-error animate-pulse rounded-full"></div>
+<div class="hidden group-hover:block absolute top-4 left-4 bg-black/80 border border-error p-2 whitespace-nowrap z-10">
+<p class="font-['Space_Mono'] text-[10px] text-error font-bold">OBJ_X-442 (HAZARD)</p>
+</div>
+</div>
+<div class="absolute bottom-[40%] right-[25%] group">
+<div class="w-1.5 h-1.5 bg-secondary-container rounded-full"></div>
+<div class="hidden group-hover:block absolute top-4 left-4 bg-black/80 border border-secondary-container p-2 whitespace-nowrap z-10">
+<p class="font-['Space_Mono'] text-[10px] text-secondary-container font-bold">OBJ_S-109 (SAFE)</p>
+</div>
+</div>
+<div class="absolute top-4 left-4">
+<h1 class="font-['Space_Grotesk'] font-bold text-xl text-on-surface tracking-widest uppercase">ASTEROID_RADAR</h1>
+<p class="font-['Space_Mono'] text-[10px] text-cyan-400/70 uppercase tracking-tighter">Scanning Deep Sector V</p>
+</div>
+<div class="hud-bracket-tl"></div>
+<div class="hud-bracket-tr"></div>
+<div class="hud-bracket-bl"></div>
+<div class="hud-bracket-br"></div>
+</div>
+<!-- Summary Stats Section -->
+<div class="grid grid-cols-2 gap-4 mb-8 max-w-2xl mx-auto">
+<div class="bg-surface-container-low border-l-4 border-secondary-container p-4">
+<p class="font-['Space_Mono'] text-[10px] text-on-surface-variant uppercase mb-1">Detected_Objects</p>
+<div class="flex items-baseline gap-2">
+<span class="text-3xl font-black font-['Space_Grotesk'] text-secondary-container">1,248</span>
+<span class="text-[10px] text-secondary-container/60 font-['Space_Mono']">+12%_CY</span>
+</div>
+</div>
+<div class="bg-surface-container-low border-l-4 border-tertiary-container p-4">
+<p class="font-['Space_Mono'] text-[10px] text-on-surface-variant uppercase mb-1">Critical_Threats</p>
+<div class="flex items-baseline gap-2">
+<span class="text-3xl font-black font-['Space_Grotesk'] text-tertiary-container">03</span>
+<span class="text-[10px] text-tertiary-container/60 font-['Space_Mono']">ALERT_ACTIVE</span>
+</div>
+</div>
+</div>
+<!-- Data List / Table -->
+<div class="max-w-2xl mx-auto">
+<div class="flex items-center justify-between mb-4 px-2">
+<h2 class="font-['Space_Mono'] text-xs font-bold text-on-surface uppercase tracking-widest">Live_Feed_Readout</h2>
+<span class="text-[10px] font-['Space_Mono'] text-cyan-400 animate-pulse">SYSTEM_ONLINE</span>
+</div>
+<div class="space-y-3">
+<!-- Data Row 1 -->
+<div class="bg-surface-container p-4 border border-secondary-fixed-dim/20 hover:bg-surface-container-high transition-colors group relative">
+<div class="flex justify-between items-start">
+<div class="flex flex-col">
+<span class="font-['Space_Mono'] text-sm font-bold text-on-surface">OBJ_ALPHA-901</span>
+<span class="font-['Space_Mono'] text-[10px] text-on-surface-variant">DIST: 1.2M KM | VEL: 42KM/S</span>
+</div>
+<span class="px-2 py-0.5 bg-secondary-container text-on-secondary-container font-['Space_Mono'] text-[9px] font-bold uppercase tracking-widest">SAFE_PATH</span>
+</div>
+<div class="mt-3 w-full h-1 bg-surface-container-highest">
+<div class="w-[85%] h-full bg-secondary-container"></div>
+</div>
+</div>
+<!-- Data Row 2 -->
+<div class="bg-surface-container p-4 border border-tertiary-container/40 hover:bg-surface-container-high transition-colors group relative">
+<div class="flex justify-between items-start">
+<div class="flex flex-col">
+<span class="font-['Space_Mono'] text-sm font-bold text-on-surface">THREAT_X-442</span>
+<span class="font-['Space_Mono'] text-[10px] text-on-surface-variant">DIST: 450K KM | VEL: 88KM/S</span>
+</div>
+<span class="px-2 py-0.5 bg-tertiary-container text-on-tertiary-container font-['Space_Mono'] text-[9px] font-bold uppercase tracking-widest">HAZARD_LVL_4</span>
+</div>
+<div class="mt-3 w-full h-1 bg-surface-container-highest">
+<div class="w-[20%] h-full bg-tertiary-container"></div>
+</div>
+</div>
+<!-- Data Row 3 -->
+<div class="bg-surface-container p-4 border border-secondary-fixed-dim/20 hover:bg-surface-container-high transition-colors group relative">
+<div class="flex justify-between items-start">
+<div class="flex flex-col">
+<span class="font-['Space_Mono'] text-sm font-bold text-on-surface">OBJ_GAMA-112</span>
+<span class="font-['Space_Mono'] text-[10px] text-on-surface-variant">DIST: 3.8M KM | VEL: 12KM/S</span>
+</div>
+<span class="px-2 py-0.5 bg-secondary-container text-on-secondary-container font-['Space_Mono'] text-[9px] font-bold uppercase tracking-widest">SAFE_PATH</span>
+</div>
+<div class="mt-3 w-full h-1 bg-surface-container-highest">
+<div class="w-[95%] h-full bg-secondary-container"></div>
+</div>
+</div>
+</div>
+<!-- Footer Action -->
+<button class="w-full mt-8 py-4 bg-surface-container border border-secondary-container text-secondary-container font-['Space_Mono'] uppercase tracking-[0.2em] text-xs font-bold hover:shadow-[0_0_20px_rgba(0,244,254,0.3)] active:opacity-70 transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="refresh">refresh</span>
+                SYSTEM_DIAGNOSTIC_REBOOT
+            </button>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 bg-[#131313]/90 backdrop-blur-2xl flex justify-around items-center h-20 border-t border-cyan-500/20 shadow-[0_-5px_20px_rgba(0,0,0,0.5)]">
+<a class="flex flex-col items-center gap-1 text-slate-400" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-['Space_Mono'] uppercase tracking-widest text-[8px]">Home</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400" href="#">
+<span class="material-symbols-outlined" data-icon="explore">explore</span>
+<span class="font-['Space_Mono'] uppercase tracking-widest text-[8px]">Explore</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-cyan-400" href="#">
+<span class="material-symbols-outlined font-bold" data-icon="radar" style="font-variation-settings: 'FILL' 1;">radar</span>
+<span class="font-['Space_Mono'] uppercase tracking-widest text-[8px]">Radar</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400" href="#">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="font-['Space_Mono'] uppercase tracking-widest text-[8px]">Alerts</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-['Space_Mono'] uppercase tracking-widest text-[8px]">Pilot</span>
+</a>
+</nav>
+</body></html>
