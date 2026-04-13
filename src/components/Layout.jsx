@@ -1,10 +1,7 @@
 import { Outlet, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import Navbar from './Navbar'
-import Sidebar from './Sidebar'
 import TelemetryFooter from './TelemetryFooter'
-import { useISSPosition } from '../hooks/useISSPosition'
-import { useAsteroids } from '../hooks/useAsteroids'
 
 const pageVariants = {
   initial: { opacity: 0, y: 10 },
@@ -13,8 +10,6 @@ const pageVariants = {
 }
 
 export default function Layout({ favCtx }) {
-  const { data: issPosition } = useISSPosition()
-  const { data: neoData } = useAsteroids()
   const location = useLocation()
 
   return (
@@ -23,22 +18,19 @@ export default function Layout({ favCtx }) {
 
       <Navbar favCount={favCtx?.favorites?.length ?? 0} />
 
-      <div className="flex">
-        <main className="flex-1 pt-16 pr-20 pb-9 min-h-screen overflow-hidden">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={location.pathname}
-              variants={pageVariants}
-              initial="initial"
-              animate="animate"
-              exit="exit"
-            >
-              <Outlet />
-            </motion.div>
-          </AnimatePresence>
-        </main>
-        <Sidebar issPosition={issPosition} hazardousCount={neoData?.hazardousCount} />
-      </div>
+      <main className="pt-16 pb-9 min-h-screen">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={location.pathname}
+            variants={pageVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+          >
+            <Outlet />
+          </motion.div>
+        </AnimatePresence>
+      </main>
 
       <TelemetryFooter />
     </div>

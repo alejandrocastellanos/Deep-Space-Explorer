@@ -27,8 +27,8 @@ export default function Navbar({ favCount = 0 }) {
     <>
       <nav className="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-6 md:px-8 h-16 bg-black/40 backdrop-blur-xl border-b border-cyan-500/30 shadow-[0_1px_0_0_rgba(0,244,254,0.3)]">
         {/* Logo */}
-        <div className="text-lg md:text-xl font-black tracking-tighter text-primary-container font-headline select-none">
-          ASTRAL_MISSION_CONTROL
+        <div className="select-none">
+          <img src="/icon.png" alt="Deep Space Explorer" className="h-10 w-10 rounded-xl" />
         </div>
 
         {/* Desktop links */}

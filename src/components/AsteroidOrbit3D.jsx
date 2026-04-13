@@ -1,4 +1,4 @@
-import { useRef, useState, useMemo, Suspense } from 'react'
+import { useRef, useState, useMemo, useEffect, Suspense } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { OrbitControls, Stars } from '@react-three/drei'
 import { EffectComposer, Bloom } from '@react-three/postprocessing'
@@ -22,34 +22,57 @@ function toOrbit(dist, minD, maxD) {
 
 /* ── Earth ── */
 function Earth() {
-  const coreRef = useRef()
-  const wireRef = useRef()
+  const coreRef   = useRef()
+  const cloudsRef = useRef()
+  const [tex, setTex] = useState(null)
+
+  // Load textures imperatively — never blocks rendering
+  useEffect(() => {
+    const loader = new THREE.TextureLoader()
+    loader.setCrossOrigin('anonymous')
+
+    Promise.all([
+      loader.loadAsync('/textures/earth-day.jpg'),
+      loader.loadAsync('/textures/earth-bump.png'),
+      loader.loadAsync('/textures/earth-specular.png'),
+    ])
+      .then(([day, bump, spec]) => setTex({ day, bump, spec }))
+      .catch(() => { /* keep null → fallback sphere stays */ })
+  }, [])
 
   useFrame(({ clock }) => {
-    const t = clock.getElapsedTime()
-    if (coreRef.current) coreRef.current.rotation.y = t * 0.04
-    if (wireRef.current) wireRef.current.rotation.y = t * 0.04
+    const e = clock.getElapsedTime()
+    if (coreRef.current)   coreRef.current.rotation.y   = e * 0.04
+    if (cloudsRef.current) cloudsRef.current.rotation.y = e * 0.047
   })
 
   return (
     <group>
-      {/* Ocean body */}
+      {/* Surface */}
       <mesh ref={coreRef}>
         <sphereGeometry args={[EARTH_R, 64, 64]} />
-        <meshStandardMaterial
-          color="#0b2e50"
-          emissive="#001a33"
-          emissiveIntensity={0.5}
-          metalness={0.2}
-          roughness={0.7}
-        />
+        {tex ? (
+          <meshPhongMaterial
+            map={tex.day}
+            bumpMap={tex.bump}
+            bumpScale={0.06}
+            specularMap={tex.spec}
+            specular="#1a4488"
+            shininess={14}
+          />
+        ) : (
+          /* Fallback: visible immediately, blue procedural */
+          <meshStandardMaterial
+            color="#0b3a6b"
+            emissive="#001a33"
+            emissiveIntensity={0.5}
+            metalness={0.1}
+            roughness={0.75}
+          />
+        )}
       </mesh>
 
-      {/* HUD grid lines on surface */}
-      <mesh ref={wireRef}>
-        <sphereGeometry args={[EARTH_R + 0.003, 18, 9]} />
-        <meshBasicMaterial color="#00aaff" wireframe transparent opacity={0.05} />
-      </mesh>
+      {/* Cloud layer — only once textures arrive */}
 
       {/* Atmosphere — inner glow */}
       <mesh>
@@ -59,7 +82,7 @@ function Earth() {
           emissive="#1133cc"
           emissiveIntensity={0.8}
           transparent
-          opacity={0.13}
+          opacity={0.12}
           side={THREE.BackSide}
           depthWrite={false}
         />
@@ -67,7 +90,7 @@ function Earth() {
 
       {/* Atmosphere — outer halo */}
       <mesh>
-        <sphereGeometry args={[EARTH_R + 0.22, 32, 32]} />
+        <sphereGeometry args={[EARTH_R + 0.24, 32, 32]} />
         <meshStandardMaterial
           color="#0022bb"
           transparent
@@ -75,12 +98,6 @@ function Earth() {
           side={THREE.BackSide}
           depthWrite={false}
         />
-      </mesh>
-
-      {/* City lights hint */}
-      <mesh>
-        <sphereGeometry args={[EARTH_R + 0.01, 32, 32]} />
-        <meshBasicMaterial color="#ffcc44" transparent opacity={0.025} />
       </mesh>
     </group>
   )
@@ -217,11 +234,6 @@ function Scene({ asteroids, onSelect, selected }) {
       {/* Asteroids + orbits */}
       {limited.map((a, i) => (
         <group key={a.id}>
-          <OrbitRing
-            radius={orbits[i].radius}
-            inclination={orbits[i].inclination}
-            isHazardous={a.isHazardous}
-          />
           <AsteroidObject
             data={a}
             orbitRadius={orbits[i].radius}
@@ -278,11 +290,11 @@ export default function AsteroidOrbit3D({ asteroids }) {
   const tr = t[lang].asteroids
 
   return (
-    <div className="relative w-full h-full bg-black">
+    <div className="relative w-full bg-black" style={{ height: '100%' }}>
       <Canvas
         camera={{ position: [0, 3.5, 11], fov: 52 }}
         gl={{ antialias: true, alpha: false }}
-        style={{ background: '#00010a' }}
+        style={{ background: '#00010a', width: '100%', height: '100%' }}
         onPointerMissed={() => setSelected(null)}
       >
         <Suspense fallback={null}>

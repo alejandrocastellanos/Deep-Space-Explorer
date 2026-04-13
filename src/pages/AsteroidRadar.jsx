@@ -3,7 +3,8 @@ import { useAsteroids } from '../hooks/useAsteroids'
 import { riskBorderColor, riskBadgeClass, riskLabel, riskIcon, riskIconClass } from '../utils/asteroidRisk'
 import { useLanguage } from '../contexts/LanguageContext'
 import { t } from '../i18n/translations'
-import AsteroidOrbit3D from '../components/AsteroidOrbit3D'
+import { lazy, Suspense as ReactSuspense } from 'react'
+const AsteroidOrbit3D = lazy(() => import('../components/AsteroidOrbit3D'))
 
 function fmt(numStr, decimals = 0) {
   return Number(numStr).toLocaleString('en-US', { maximumFractionDigits: decimals })
@@ -91,25 +92,106 @@ export default function AsteroidRadar() {
 
       {/* ── 3D View ── */}
       {view === '3d' && (
-        <div className="flex-1" style={{ minHeight: '600px' }}>
-          {isLoading ? (
-            <div className="w-full h-full flex items-center justify-center bg-black space-grid-bg" style={{ minHeight: 600 }}>
-              <div className="text-center space-y-3 animate-pulse">
-                <span className="material-symbols-outlined text-secondary-container/30 text-6xl">public</span>
-                <p className="font-label text-secondary-container/30 text-xs tracking-widest uppercase">
-                  LOADING_NEO_DATA...
-                </p>
+        <div>
+          {/* Canvas */}
+          <div style={{ height: 'calc(100vh - 210px)' }}>
+            {isLoading ? (
+              <div className="w-full h-full flex items-center justify-center bg-black space-grid-bg" style={{ minHeight: 600 }}>
+                <div className="text-center space-y-3 animate-pulse">
+                  <span className="material-symbols-outlined text-secondary-container/30 text-6xl">public</span>
+                  <p className="font-label text-secondary-container/30 text-xs tracking-widest uppercase">
+                    LOADING_NEO_DATA...
+                  </p>
+                </div>
+              </div>
+            ) : isError ? (
+              <div className="flex items-center justify-center h-96">
+                <div className="text-center space-y-4">
+                  <span className="material-symbols-outlined text-error text-6xl">signal_disconnected</span>
+                  <p className="font-label text-error/70 text-sm tracking-widest uppercase">{tr.error}</p>
+                </div>
+              </div>
+            ) : (
+              <ReactSuspense fallback={
+                <div className="w-full h-full flex items-center justify-center bg-black space-grid-bg" style={{ minHeight: 600 }}>
+                  <div className="text-center space-y-3 animate-pulse">
+                    <span className="material-symbols-outlined text-secondary-container/30 text-6xl">public</span>
+                    <p className="font-label text-secondary-container/30 text-xs tracking-widest uppercase">LOADING_3D_ENGINE...</p>
+                  </div>
+                </div>
+              }>
+                <AsteroidOrbit3D asteroids={list} />
+              </ReactSuspense>
+            )}
+          </div>
+
+          {/* Info panels below the 3D canvas */}
+          {!isLoading && !isError && (
+            <div className="space-grid-bg px-6 md:px-10 py-8">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <div className="p-5 bg-surface-container/50 border border-outline-variant/20 relative">
+                  <div className="hud-bracket-tl" /><div className="hud-bracket-br" />
+                  <h3 className="font-label text-[10px] tracking-widest text-secondary-container mb-4 uppercase">
+                    {tr.trajectoryTitle}
+                  </h3>
+                  <div className="h-20 flex items-end gap-1 px-2">
+                    {[60, 80, 40, 90, 50, 100, 70, 55].map((h, i) => (
+                      <div
+                        key={i}
+                        className={`flex-1 ${i === 5 ? 'bg-tertiary-container animate-pulse' : 'bg-cyan-500/20'}`}
+                        style={{ height: `${h}%` }}
+                      />
+                    ))}
+                  </div>
+                  <div className="mt-3 font-label text-[8px] text-on-surface-variant/40 flex justify-between">
+                    <span>T-48H</span>
+                    <span>{tr.collisionRisk}</span>
+                    <span>T+48H</span>
+                  </div>
+                </div>
+
+                <div className="p-5 bg-surface-container/50 border border-outline-variant/20 relative">
+                  <div className="hud-bracket-tl" /><div className="hud-bracket-br" />
+                  <h3 className="font-label text-[10px] tracking-widest text-secondary-container mb-4 uppercase">
+                    {tr.radarTitle}
+                  </h3>
+                  <div className="aspect-video bg-black flex items-center justify-center overflow-hidden border border-cyan-500/10 relative">
+                    <div className="w-28 h-28 border border-secondary-container/30 rounded-full" />
+                    <div className="absolute w-14 h-14 border border-secondary-container/50 rounded-full" />
+                    {data?.asteroids?.slice(0, 5).map((a, i) => (
+                      <div
+                        key={a.id}
+                        className={`absolute w-1.5 h-1.5 rounded-full ${a.isHazardous ? 'bg-tertiary-container shadow-[0_0_8px_#860040]' : 'bg-secondary-container shadow-[0_0_6px_#00F4FE]'}`}
+                        style={{ top: `${20 + i * 14}%`, left: `${15 + i * 17}%` }}
+                      />
+                    ))}
+                  </div>
+                </div>
+
+                <div className="p-5 bg-surface-container/50 border border-outline-variant/20 relative">
+                  <div className="hud-bracket-tl" /><div className="hud-bracket-br" />
+                  <h3 className="font-label text-[10px] tracking-widest text-secondary-container mb-4 uppercase">
+                    {tr.briefingTitle}
+                  </h3>
+                  <div className="space-y-3">
+                    {[
+                      { label: tr.totalNeo,       val: list.length },
+                      { label: tr.hazardous,      val: data?.hazardousCount },
+                      { label: tr.sensorFidelity, val: '99.98%', highlight: true },
+                      { label: tr.defenseStatus,  val: lang === 'es' ? 'EN_ESPERA' : 'STANDBY' },
+                    ].map(({ label, val, highlight }) => (
+                      <div key={label} className="flex justify-between border-b border-surface-container-highest pb-2">
+                        <span className="font-label text-[10px] text-on-surface-variant">{label}</span>
+                        <span className={`font-headline font-bold text-xs ${highlight ? 'text-green-500' : 'text-on-surface'}`}>{val}</span>
+                      </div>
+                    ))}
+                  </div>
+                  <button className="mt-5 w-full py-2 bg-primary-container text-on-primary-container font-label text-[10px] font-bold uppercase tracking-[0.2em] border border-cyan-400/30 hover:bg-secondary-container/20 transition-all flicker-effect">
+                    {tr.generateReport}
+                  </button>
+                </div>
               </div>
             </div>
-          ) : isError ? (
-            <div className="flex items-center justify-center h-96">
-              <div className="text-center space-y-4">
-                <span className="material-symbols-outlined text-error text-6xl">signal_disconnected</span>
-                <p className="font-label text-error/70 text-sm tracking-widest uppercase">{tr.error}</p>
-              </div>
-            </div>
-          ) : (
-            <AsteroidOrbit3D asteroids={list} />
           )}
         </div>
       )}
@@ -232,72 +314,6 @@ export default function AsteroidRadar() {
             )}
           </section>
 
-          {/* Footer panels */}
-          {!isLoading && !isError && (
-            <footer className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-5">
-              <div className="p-5 bg-surface-container/50 border border-outline-variant/20 relative">
-                <div className="hud-bracket-tl" /><div className="hud-bracket-br" />
-                <h3 className="font-label text-[10px] tracking-widest text-secondary-container mb-4 uppercase">
-                  {tr.trajectoryTitle}
-                </h3>
-                <div className="h-20 flex items-end gap-1 px-2">
-                  {[60, 80, 40, 90, 50, 100, 70, 55].map((h, i) => (
-                    <div
-                      key={i}
-                      className={`flex-1 ${i === 5 ? 'bg-tertiary-container animate-pulse' : 'bg-cyan-500/20'}`}
-                      style={{ height: `${h}%` }}
-                    />
-                  ))}
-                </div>
-                <div className="mt-3 font-label text-[8px] text-on-surface-variant/40 flex justify-between">
-                  <span>T-48H</span>
-                  <span>{tr.collisionRisk}</span>
-                  <span>T+48H</span>
-                </div>
-              </div>
-
-              <div className="p-5 bg-surface-container/50 border border-outline-variant/20 relative">
-                <div className="hud-bracket-tl" /><div className="hud-bracket-br" />
-                <h3 className="font-label text-[10px] tracking-widest text-secondary-container mb-4 uppercase">
-                  {tr.radarTitle}
-                </h3>
-                <div className="aspect-video bg-black flex items-center justify-center overflow-hidden border border-cyan-500/10 relative">
-                  <div className="w-28 h-28 border border-secondary-container/30 rounded-full" />
-                  <div className="absolute w-14 h-14 border border-secondary-container/50 rounded-full" />
-                  {data?.asteroids?.slice(0, 5).map((a, i) => (
-                    <div
-                      key={a.id}
-                      className={`absolute w-1.5 h-1.5 rounded-full ${a.isHazardous ? 'bg-tertiary-container shadow-[0_0_8px_#860040]' : 'bg-secondary-container shadow-[0_0_6px_#00F4FE]'}`}
-                      style={{ top: `${20 + i * 14}%`, left: `${15 + i * 17}%` }}
-                    />
-                  ))}
-                </div>
-              </div>
-
-              <div className="p-5 bg-surface-container/50 border border-outline-variant/20 relative">
-                <div className="hud-bracket-tl" /><div className="hud-bracket-br" />
-                <h3 className="font-label text-[10px] tracking-widest text-secondary-container mb-4 uppercase">
-                  {tr.briefingTitle}
-                </h3>
-                <div className="space-y-3">
-                  {[
-                    { label: tr.totalNeo,       val: list.length },
-                    { label: tr.hazardous,      val: data?.hazardousCount },
-                    { label: tr.sensorFidelity, val: '99.98%', highlight: true },
-                    { label: tr.defenseStatus,  val: lang === 'es' ? 'EN_ESPERA' : 'STANDBY' },
-                  ].map(({ label, val, highlight }) => (
-                    <div key={label} className="flex justify-between border-b border-surface-container-highest pb-2">
-                      <span className="font-label text-[10px] text-on-surface-variant">{label}</span>
-                      <span className={`font-headline font-bold text-xs ${highlight ? 'text-green-500' : 'text-on-surface'}`}>{val}</span>
-                    </div>
-                  ))}
-                </div>
-                <button className="mt-5 w-full py-2 bg-primary-container text-on-primary-container font-label text-[10px] font-bold uppercase tracking-[0.2em] border border-cyan-400/30 hover:bg-secondary-container/20 transition-all flicker-effect">
-                  {tr.generateReport}
-                </button>
-              </div>
-            </footer>
-          )}
         </div>
       )}
     </div>
