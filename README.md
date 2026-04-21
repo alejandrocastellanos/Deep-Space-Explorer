@@ -2,7 +2,7 @@
 
 An immersive, high-fidelity web application for cosmic exploration. **Deep Space Explorer** integrates real-time data from NASA and CelesTrak to provide a stunning 3D experience of our near-earth environment.
 
-![Home](file:///Users/alejo/Documents/Personal/nasa%20proyect/Deep-Space-Explorer/imagenesReadme/home.png)
+![Home](imagenesReadme/home.png)
 
 ## 🌌 Key Features
 
@@ -16,10 +16,10 @@ An immersive, high-fidelity web application for cosmic exploration. **Deep Space
 ## 📸 Screenshots
 
 ### Asteroid Radar 3D
-![Asteroids](file:///Users/alejo/Documents/Personal/nasa%20proyect/Deep-Space-Explorer/imagenesReadme/asteroids.png)
+![Asteroids](imagenesReadme/asteroids.png)
 
 ### NASA Picture of the Day
-![POTD](file:///Users/alejo/Documents/Personal/nasa%20proyect/Deep-Space-Explorer/imagenesReadme/imagen%20del%20dia.png)
+![POTD](imagenesReadme/imagen%20del%20dia.png)
 
 ## 🛠️ Technology Stack
 
