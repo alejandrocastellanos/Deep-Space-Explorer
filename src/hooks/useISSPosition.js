@@ -5,9 +5,9 @@ export function useISSPosition() {
   return useQuery({
     queryKey: ['iss-position'],
     queryFn: () =>
-      issApi.get('/iss-now.json').then(r => ({
-        lat: parseFloat(r.data.iss_position.latitude),
-        lng: parseFloat(r.data.iss_position.longitude),
+      issApi.get('/satellites/25544').then(r => ({
+        lat: parseFloat(r.data.latitude),
+        lng: parseFloat(r.data.longitude),
         timestamp: r.data.timestamp,
       })),
     refetchInterval: 5000,

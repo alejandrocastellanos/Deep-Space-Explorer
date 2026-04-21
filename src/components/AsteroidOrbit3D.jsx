@@ -1,8 +1,9 @@
 import { useRef, useState, useMemo, useEffect, Suspense } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
-import { OrbitControls, Stars } from '@react-three/drei'
+import { OrbitControls, Stars, Html } from '@react-three/drei'
 import { EffectComposer, Bloom } from '@react-three/postprocessing'
 import * as THREE from 'three'
+import * as satellite from 'satellite.js'
 import { useLanguage } from '../contexts/LanguageContext'
 import { t } from '../i18n/translations'
 
@@ -10,6 +11,8 @@ const EARTH_R = 1.5
 const MIN_ORBIT = 3.0
 const MAX_ORBIT = 7.5
 const MAX_NEO = 25
+const LD_IN_KM = 384400
+const MOON_R = 0.4
 
 /* ── Orbit radius mapping (log scale) ── */
 function toOrbit(dist, minD, maxD) {
@@ -40,10 +43,22 @@ function Earth() {
       .catch(() => { /* keep null → fallback sphere stays */ })
   }, [])
 
-  useFrame(({ clock }) => {
-    const e = clock.getElapsedTime()
-    if (coreRef.current)   coreRef.current.rotation.y   = e * 0.04
-    if (cloudsRef.current) cloudsRef.current.rotation.y = e * 0.047
+  useFrame(() => {
+    // Current GMT time expressed as rotation
+    // gstime returns the Greenwich Sidereal Time in radians
+    const gmst = satellite.gstime(new Date())
+    
+    // We subtract PI/2 because the standard Three.js sphere texture 
+    // center (Long 0) aligns with the equinox logic of gstime differently.
+    // This aligns the "Noon" part of the Earth with the static Sun light.
+    if (coreRef.current) {
+      coreRef.current.rotation.y = gmst - Math.PI / 2
+    }
+    
+    // Cloud layer still rotates slowly for dynamism
+    if (cloudsRef.current) {
+      cloudsRef.current.rotation.y = gmst * 1.05
+    }
   })
 
   return (
@@ -196,6 +211,50 @@ function AsteroidObject({ data, orbitRadius, inclination, initialAngle, onSelect
   )
 }
 
+/* ── Moon ── */
+function Moon({ orbitRadius }) {
+  const meshRef = useRef()
+  const { lang } = useLanguage()
+  const tr = t[lang].asteroids
+
+  useFrame(() => {
+    if (meshRef.current) meshRef.current.rotation.y += 0.003
+  })
+
+  return (
+    <group>
+      {/* Moon Orbit Ring */}
+      <mesh rotation={[Math.PI / 2, 0, 0]}>
+        <torusGeometry args={[orbitRadius, 0.005, 8, 128]} />
+        <meshBasicMaterial color="#ffffff" transparent opacity={0.06} />
+      </mesh>
+
+      {/* Moon Object at 0 deg initial */}
+      <group position={[orbitRadius, 0, 0]}>
+        <mesh ref={meshRef}>
+          <sphereGeometry args={[MOON_R, 32, 32]} />
+          <meshStandardMaterial
+            color="#888d92"
+            roughness={0.9}
+            metalness={0.1}
+            emissive="#1a1a1a"
+            emissiveIntensity={0.2}
+          />
+        </mesh>
+        
+        {/* Label anchor */}
+        <group position={[0, MOON_R + 0.3, 0]}>
+          <Html center distanceFactor={10}>
+            <div className="font-label text-[8px] text-white/40 tracking-[0.2em] uppercase whitespace-nowrap bg-black/40 px-2 py-0.5 border-l-2 border-white/10 backdrop-blur-sm select-none">
+              {tr.moonLabel}
+            </div>
+          </Html>
+        </group>
+      </group>
+    </group>
+  )
+}
+
 /* ── Scene (inside Canvas) ── */
 function Scene({ asteroids, onSelect, selected }) {
   const limited = useMemo(() => asteroids.slice(0, MAX_NEO), [asteroids])
@@ -220,16 +279,19 @@ function Scene({ asteroids, onSelect, selected }) {
 
   return (
     <>
-      {/* Lighting */}
-      <ambientLight intensity={0.12} color="#000d22" />
-      <directionalLight position={[8, 5, 6]} intensity={2.0} color="#f0f4ff" />
-      <directionalLight position={[-6, -3, -5]} intensity={0.25} color="#0033aa" />
+      {/* Lighting: Uniform and clear visibility as requested */}
+      <ambientLight intensity={0.7} color="#ffffff" />
+      <directionalLight position={[10, 5, 5]} intensity={1.5} color="#ffffff" />
+      <directionalLight position={[-10, -5, -5]} intensity={0.5} color="#ffffff" />
 
       {/* Background */}
       <Stars radius={90} depth={60} count={5000} factor={3} saturation={0.3} fade speed={0.4} />
 
       {/* Earth */}
       <Earth />
+
+      {/* Moon reference */}
+      <Moon orbitRadius={toOrbit(LD_IN_KM, minD, maxD)} />
 
       {/* Asteroids + orbits */}
       {limited.map((a, i) => (

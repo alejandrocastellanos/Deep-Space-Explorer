@@ -6,7 +6,7 @@ export const t = {
       explorer: 'Explorer',
       artemis: 'Artemis II',
       asteroids: 'Asteroid Radar',
-      iss: 'ISS Tracker',
+      iss: 'Satellite Tracker',
       favorites: 'Favorites',
     },
     home: {
@@ -129,6 +129,7 @@ export const t = {
       safeLabel: 'SAFE',
       controls: 'Drag to rotate · Scroll to zoom',
       clickAsteroid: 'Click an asteroid for details',
+      moonLabel: 'Moon // Reference',
     },
     iss: {
       live: 'LIVE_FEED',
@@ -141,6 +142,10 @@ export const t = {
       primeMeridian: 'REF: PRIME_MERIDIAN',
       encryption: 'ENCRYPTION: AES-256_ACTIVE',
       autoUpdate: 'AUTO: 5s',
+      descStations: 'Human-habitable research laboratories like the ISS and Tiangong orbiting in microgravity.',
+      descStarlink: 'High-speed satellite internet constellation providing global coverage, operated by SpaceX.',
+      descGps: 'Precision positioning and timing network supporting navigation and synchronization worldwide.',
+      descWeather: 'Meteorological sensors monitoring atmospheric conditions and climate patterns in real-time.',
     },
     favorites: {
       breadcrumb: 'PERSONAL_ARCHIVE // SAVED_ASSETS',
@@ -177,7 +182,7 @@ export const t = {
       explorer: 'Explorador',
       artemis: 'Artemis II',
       asteroids: 'Radar de Asteroides',
-      iss: 'Rastreador ISS',
+      iss: 'Rastreo satélites',
       favorites: 'Favoritos',
     },
     home: {
@@ -300,6 +305,7 @@ export const t = {
       safeLabel: 'SEGURO',
       controls: 'Arrastrar para rotar · Scroll para zoom',
       clickAsteroid: 'Haz clic en un asteroide para ver detalles',
+      moonLabel: 'Luna // Referencia',
     },
     iss: {
       live: 'TRANSMISIÓN_EN_VIVO',
@@ -312,6 +318,10 @@ export const t = {
       primeMeridian: 'REF: MERIDIANO_PRINCIPAL',
       encryption: 'CIFRADO: AES-256_ACTIVO',
       autoUpdate: 'AUTO: 5s',
+      descStations: 'Laboratorios de investigación habitables como la ISS y Tiangong que orbitan en microgravedad.',
+      descStarlink: 'Constelación de internet de alta velocidad con cobertura global operada por SpaceX.',
+      descGps: 'Red de posicionamiento y tiempo de precisión que soporta navegación sincronizada globalmente.',
+      descWeather: 'Sensores meteorológicos que monitorean condiciones atmosféricas y patrones climáticos.',
     },
     favorites: {
       breadcrumb: 'ARCHIVO_PERSONAL // RECURSOS_GUARDADOS',

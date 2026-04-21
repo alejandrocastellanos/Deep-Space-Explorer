@@ -5,10 +5,10 @@ import { useLanguage } from '../contexts/LanguageContext'
 import { t } from '../i18n/translations'
 
 const CREW = [
-  { name: 'Reid Wiseman',   role: 'Commander',          agency: 'NASA', icon: 'star' },
-  { name: 'Victor Glover',  role: 'Pilot',              agency: 'NASA', icon: 'flight' },
-  { name: 'Christina Koch', role: 'Mission Specialist',  agency: 'NASA', icon: 'science' },
-  { name: 'Jeremy Hansen',  role: 'Mission Specialist',  agency: 'CSA',  icon: 'public' },
+  { name: 'Reid Wiseman',   role: 'Commander',          agency: 'NASA', icon: 'star',           image: '/crew/wiseman.png' },
+  { name: 'Victor Glover',  role: 'Pilot',              agency: 'NASA', icon: 'flight',         image: '/crew/glover.png' },
+  { name: 'Christina Koch', role: 'Mission Specialist',  agency: 'NASA', icon: 'science',        image: '/crew/koch.png' },
+  { name: 'Jeremy Hansen',  role: 'Mission Specialist',  agency: 'CSA',  icon: 'public',         image: '/crew/hansen.png' },
 ]
 
 const TIMELINE_BASE = [
@@ -120,22 +120,38 @@ export default function ArtemisSection({ favCtx }) {
           <span className="font-label text-xs text-on-surface-variant uppercase tracking-widest">{tr.crewCount}</span>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {CREW.map((member, i) => (
-            <div key={i} className="relative bg-surface-container glass-panel p-5 flex flex-col gap-3">
-              <div className="hud-bracket-tl" /><div className="hud-bracket-br" />
-              <div className="w-12 h-12 bg-primary-container/30 border border-primary-container/40 flex items-center justify-center">
-                <span className="material-symbols-outlined text-primary text-2xl">{member.icon}</span>
+            <div key={i} className="relative bg-surface-container glass-panel overflow-hidden flex flex-col group transition-all duration-300 hover:border-secondary-container/40">
+              <div className="hud-bracket-tl z-20" /><div className="hud-bracket-br z-20" />
+              
+              {/* Image with overlay and animation */}
+              <div className="aspect-[4/5] overflow-hidden relative">
+                <img 
+                  src={member.image} 
+                  alt={member.name} 
+                  className="w-full h-full object-cover opacity-100 group-hover:scale-105 transition-all duration-700" 
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-surface-container via-transparent to-transparent opacity-80" />
+                
+                {/* Role Icon Overlay */}
+                <div className="absolute bottom-4 right-4 w-12 h-12 bg-black/70 backdrop-blur-md border border-primary-container/30 flex items-center justify-center text-primary z-10 transition-transform duration-300 group-hover:scale-110 group-hover:border-primary">
+                  <span className="material-symbols-outlined text-2xl">{member.icon}</span>
+                </div>
               </div>
-              <div>
-                <p className="font-headline font-bold text-on-surface text-base leading-tight">{member.name}</p>
-                <p className="font-label text-[10px] text-secondary-container uppercase tracking-widest mt-1">
+
+              <div className="p-6 pt-2 flex flex-col gap-1 relative z-10">
+                <p className="font-headline font-bold text-on-surface text-lg leading-tight uppercase tracking-tight">{member.name}</p>
+                <p className="font-label text-[10px] text-secondary-container uppercase tracking-widest">
                   {tr.crewRoles[member.role] ?? member.role}
                 </p>
+                <div className="mt-4 flex items-center justify-between">
+                  <span className="px-2 py-0.5 bg-surface-container-highest border border-outline-variant/40 font-label text-[9px] text-on-surface-variant uppercase tracking-widest font-bold">
+                    {member.agency}
+                  </span>
+                  <div className="w-8 h-px bg-outline-variant/30" />
+                </div>
               </div>
-              <span className="mt-auto px-2 py-0.5 w-fit bg-surface-container-highest border border-outline-variant/40 font-label text-[9px] text-on-surface-variant uppercase tracking-widest">
-                {member.agency}
-              </span>
             </div>
           ))}
         </div>

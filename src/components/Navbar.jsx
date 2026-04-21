@@ -49,7 +49,7 @@ export default function Navbar({ favCount = 0 }) {
             aria-label="Toggle language"
           >
             <span className="material-symbols-outlined text-sm">language</span>
-            {lang === 'es' ? 'EN' : 'ES'}
+            {lang === 'es' ? 'ES' : 'EN'}
           </button>
 
           {/* Favorites button */}
@@ -112,7 +112,7 @@ export default function Navbar({ favCount = 0 }) {
             className="flex items-center gap-3 px-8 py-4 font-headline tracking-[0.1em] uppercase text-sm font-bold text-on-surface-variant hover:text-secondary hover:bg-white/5 transition-colors"
           >
             <span className="material-symbols-outlined text-base">language</span>
-            {lang === 'es' ? 'Switch to English' : 'Cambiar a Español'}
+            {lang === 'es' ? 'Español' : 'English'}
           </button>
         </div>
       )}

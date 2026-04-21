@@ -10,5 +10,5 @@ export const nasaImagesApi = axios.create({
 })
 
 export const issApi = axios.create({
-  baseURL: 'https://api.open-notify.org',
+  baseURL: 'https://api.wheretheiss.at/v1',
 })
