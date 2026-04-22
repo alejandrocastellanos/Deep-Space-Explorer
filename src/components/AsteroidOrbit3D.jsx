@@ -353,6 +353,8 @@ export default function AsteroidOrbit3D({ asteroids }) {
 
   return (
     <div className="relative w-full bg-black" style={{ height: '100%' }}>
+      {/* Mobile: allow vertical scroll to pass through to the page */}
+      <div className="absolute inset-0 z-[5] md:hidden" style={{ touchAction: 'pan-y' }} />
       <Canvas
         camera={{ position: [0, 3.5, 11], fov: 52 }}
         gl={{ antialias: true, alpha: false }}
@@ -375,7 +377,7 @@ export default function AsteroidOrbit3D({ asteroids }) {
 
       {/* Selected asteroid panel */}
       {selected ? (
-        <div className="absolute top-4 right-4 bg-black/85 backdrop-blur-xl border border-secondary-container/30 p-5 w-72 glass-panel">
+        <div className="absolute top-4 right-4 bg-black/85 backdrop-blur-xl border border-secondary-container/30 p-5 w-72 glass-panel z-[10]">
           <div className="hud-bracket-tl" /><div className="hud-bracket-tr" />
           <div className="hud-bracket-bl" /><div className="hud-bracket-br" />
           <button

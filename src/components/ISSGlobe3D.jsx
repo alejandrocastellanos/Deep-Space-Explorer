@@ -247,6 +247,8 @@ export default function ISSGlobe3D({ issPosition, satellites, activeFilters, onT
 
   return (
     <div className="relative w-full" style={{ height: '100%' }}>
+      {/* Mobile: allow vertical scroll to pass through to the page */}
+      <div className="absolute inset-0 z-[5] md:hidden" style={{ touchAction: 'pan-y' }} />
       <Canvas
         camera={{ position: [0, 2.5, 7], fov: 50 }}
         gl={{ antialias: true, alpha: false }}
@@ -268,7 +270,7 @@ export default function ISSGlobe3D({ issPosition, satellites, activeFilters, onT
       </div>
 
       {/* Filter pills */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-2 flex-wrap justify-center pointer-events-auto">
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-2 flex-wrap justify-center pointer-events-auto z-[10]">
         {SAT_GROUPS.map(g => (
           <FilterPill
             key={g.key}
@@ -282,7 +284,7 @@ export default function ISSGlobe3D({ issPosition, satellites, activeFilters, onT
 
       {/* Selected satellite info panel */}
       {selectedSat ? (
-        <div className="absolute top-4 right-4 bg-black/85 backdrop-blur-xl border border-secondary-container/30 p-4 w-64">
+        <div className="absolute top-4 right-4 bg-black/85 backdrop-blur-xl border border-secondary-container/30 p-4 w-64 z-[10]">
           <div className="hud-bracket-tl" /><div className="hud-bracket-br" />
           <button
             onClick={() => setSelectedSat(null)}
