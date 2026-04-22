@@ -1,0 +1,9 @@
+# Exclude design mockups and planning docs from GitHub language stats
+plan/** linguist-documentation
+plan/Design/** linguist-vendored
+
+# Exclude build output (already gitignored, but just in case)
+dist/** linguist-generated
+
+# Treat the Vite entry HTML as generated so it doesn't dominate stats
+index.html linguist-generated
