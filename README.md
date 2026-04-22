@@ -2,6 +2,8 @@
 
 An immersive, high-fidelity web application for cosmic exploration. **Deep Space Explorer** integrates real-time data from NASA and CelesTrak to provide a stunning 3D experience of our near-earth environment.
 
+🌐 **Live demo**: [https://deepspaceexplorer.alejandrocastellanos0827.workers.dev/](https://deepspaceexplorer.alejandrocastellanos0827.workers.dev/)
+
 ![Home](imagenesReadme/home.png)
 
 ## 🌌 Key Features
