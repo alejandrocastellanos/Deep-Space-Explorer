@@ -53,5 +53,35 @@ An immersive, high-fidelity web application for cosmic exploration. **Deep Space
    npm run dev
    ```
 
+## ☁️ Deploy to Cloudflare Pages (CLI with Wrangler, no Git)
+
+Use this method to publish the site directly from your machine without connecting a Git repository.
+
+1. **Install Wrangler globally**:
+   ```bash
+   npm install -g wrangler
+   ```
+
+2. **Authenticate with Cloudflare** (opens the browser):
+   ```bash
+   wrangler login
+   ```
+
+3. **Build the production bundle**:
+   ```bash
+   npm run build
+   ```
+
+4. **Deploy the build output**:
+   ```bash
+   wrangler deploy
+   ```
+
+After the first deploy the site will be available at `https://deepspaceexplorer.<your-subdomain>.workers.dev`. Re-run steps 3–4 any time you want to publish a new version.
+
+> **SPA routing**: `wrangler.jsonc` configures `not_found_handling: "single-page-application"`, so any unknown route is served as `index.html` automatically. No `_redirects` file is needed (and in fact causes an infinite-loop validation error on Cloudflare).
+>
+> **Environment variables**: set `VITE_NASA_API_KEY` in your local `.env` before running `npm run build` (Vite inlines `VITE_*` vars at build time), or configure it in the Cloudflare dashboard if you switch to Git-based auto-deploys.
+
 ## 📜 License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
