@@ -1,24 +1,16 @@
-import { useState } from 'react'
+import { useState, lazy, Suspense } from 'react'
 import { useArtemis } from '../hooks/useArtemis'
 import MediaCard from '../components/MediaCard'
 import { useLanguage } from '../contexts/LanguageContext'
 import { t } from '../i18n/translations'
+
+const ArtemisTrajectory3D = lazy(() => import('../components/ArtemisTrajectory3D'))
 
 const CREW = [
   { name: 'Reid Wiseman',   role: 'Commander',          agency: 'NASA', icon: 'star',           image: '/crew/wiseman.png' },
   { name: 'Victor Glover',  role: 'Pilot',              agency: 'NASA', icon: 'flight',         image: '/crew/glover.png' },
   { name: 'Christina Koch', role: 'Mission Specialist',  agency: 'NASA', icon: 'science',        image: '/crew/koch.png' },
   { name: 'Jeremy Hansen',  role: 'Mission Specialist',  agency: 'CSA',  icon: 'public',         image: '/crew/hansen.png' },
-]
-
-const TIMELINE_BASE = [
-  { date: 'T+00:00',  icon: 'rocket_launch', active: true },
-  { date: 'T+01:30',  icon: 'orbit',         active: true },
-  { date: 'T+23:30',  icon: 'expand',        active: false },
-  { date: 'T+36:00',  icon: 'north_east',    active: false },
-  { date: 'T+96:00',  icon: 'brightness_2',  active: false },
-  { date: 'T+144:00', icon: 'u_turn_left',   active: false },
-  { date: 'T+240:00', icon: 'waves',         active: false },
 ]
 
 const OBJ_ICONS = ['air', 'satellite', 'space_dashboard', 'shield']
@@ -157,64 +149,34 @@ export default function ArtemisSection({ favCtx }) {
         </div>
       </section>
 
-      {/* ── Mission Timeline ── */}
-      <section className="py-12 px-8 md:px-12 bg-black border-b border-surface-container-highest">
-        <div className="flex items-center justify-between mb-8">
-          <h2 className="font-headline text-lg font-bold tracking-widest uppercase border-l-2 border-secondary-container pl-4">
-            {tr.timelineTitle}
-          </h2>
-          <div className="h-px flex-grow mx-6 bg-gradient-to-r from-secondary-container/50 to-transparent" />
-          <span className="font-label text-xs text-on-surface-variant">{tr.duration}</span>
+      {/* ── Mission Trajectory 3D ── */}
+      <section className="border-b border-surface-container-highest bg-black">
+        <div className="px-8 md:px-12 pt-10 pb-4">
+          <div className="flex items-center justify-between mb-2">
+            <h2 className="font-headline text-lg font-bold tracking-widest uppercase border-l-2 border-secondary-container pl-4">
+              {lang === 'es' ? 'TRAYECTORIA DE MISIÓN' : 'MISSION TRAJECTORY'}
+            </h2>
+            <div className="h-px flex-grow mx-6 bg-gradient-to-r from-secondary-container/50 to-transparent" />
+            <span className="font-label text-xs text-on-surface-variant uppercase tracking-widest">
+              {lang === 'es' ? 'SIMULACIÓN 3D' : '3D SIMULATION'}
+            </span>
+          </div>
+          <p className="font-label text-[10px] text-on-surface-variant/40 uppercase tracking-widest pl-6 mb-4">
+            {lang === 'es'
+              ? 'Trayectoria de retorno libre híbrida · Escala comprimida'
+              : 'Hybrid free-return trajectory · Compressed scale'}
+          </p>
         </div>
-
-        <div className="overflow-x-auto pb-4">
-          <div className="min-w-[860px] relative py-12">
-            <div className="absolute top-1/2 left-0 w-full h-px bg-secondary-container/20 shadow-[0_0_10px_rgba(0,244,254,0.2)]" />
-            <div className="flex justify-between relative z-10">
-              {TIMELINE_BASE.map((step, i) => {
-                const tl = tr.timeline[i]
-                return (
-                  <div
-                    key={i}
-                    className={`flex flex-col items-center transition-opacity ${step.active ? 'opacity-100' : 'opacity-50 hover:opacity-90'}`}
-                  >
-                    {i % 2 === 0 ? (
-                      <div className="mb-3 bg-surface-container-high p-3 border border-secondary-container/30 relative w-[110px] text-center">
-                        {step.active && <><div className="hud-bracket-tl" /><div className="hud-bracket-br" /></>}
-                        <p className="font-label text-[9px] text-secondary-container mb-1">{step.date}</p>
-                        <h3 className="font-headline font-bold text-[11px] tracking-widest uppercase leading-tight">{tl.label}</h3>
-                        <p className="font-label text-[8px] text-on-surface-variant/60 mt-1 leading-tight">{tl.detail}</p>
-                      </div>
-                    ) : (
-                      <div className="mb-3 w-[110px] h-[88px]" />
-                    )}
-
-                    <div
-                      className={`w-11 h-11 flex items-center justify-center ${
-                        step.active
-                          ? 'bg-secondary-container shadow-[0_0_20px_rgba(0,244,254,0.5)]'
-                          : 'bg-surface-container-highest border border-secondary-container/30'
-                      }`}
-                      style={{ clipPath: 'polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)' }}
-                    >
-                      <span className={`material-symbols-outlined text-base ${step.active ? 'text-black' : 'text-on-surface-variant'}`}>
-                        {step.icon}
-                      </span>
-                    </div>
-
-                    {i % 2 !== 0 && (
-                      <div className="mt-3 bg-surface-container-high p-3 border border-white/10 w-[110px] text-center">
-                        <p className="font-label text-[9px] text-on-surface-variant mb-1">{step.date}</p>
-                        <h3 className="font-headline font-bold text-[11px] tracking-widest uppercase leading-tight">{tl.label}</h3>
-                        <p className="font-label text-[8px] text-on-surface-variant/60 mt-1 leading-tight">{tl.detail}</p>
-                      </div>
-                    )}
-                  </div>
-                )
-              })}
+        <Suspense fallback={
+          <div className="h-[560px] flex items-center justify-center space-grid-bg">
+            <div className="text-center space-y-3 animate-pulse">
+              <span className="material-symbols-outlined text-secondary-container/30 text-6xl">public</span>
+              <p className="font-label text-secondary-container/30 text-xs tracking-widest uppercase">LOADING_TRAJECTORY...</p>
             </div>
           </div>
-        </div>
+        }>
+          <ArtemisTrajectory3D />
+        </Suspense>
       </section>
 
       {/* ── Mission Objectives ── */}
@@ -246,6 +208,17 @@ export default function ArtemisSection({ favCtx }) {
           <p className="font-body text-on-surface-variant text-sm leading-relaxed max-w-4xl">
             {tr.briefingText}
           </p>
+        </div>
+
+        {/* Mission infographic */}
+        <div className="mt-8 relative bg-surface-container glass-panel p-4">
+          <div className="hud-bracket-tl" /><div className="hud-bracket-br" />
+          <img
+            src={lang === 'es' ? '/images/artemis2_spanish.webp' : '/images/artemis2_english.avif'}
+            alt={tr.objectivesTitle}
+            className="w-full h-auto object-contain"
+            loading="lazy"
+          />
         </div>
       </section>
 

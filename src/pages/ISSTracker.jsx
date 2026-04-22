@@ -53,7 +53,7 @@ export default function ISSTracker() {
       {/* ── 3D Globe (70% viewport height approximately) ── */}
       <section className="relative h-[65vh] md:h-[70vh] border-b border-primary-container/20 overflow-hidden flex-shrink-0">
         {/* HUD overlays */}
-        <div className="absolute top-4 left-4 z-[10] flex items-center gap-3">
+        <div className="absolute top-4 left-4 z-[10] flex flex-wrap items-center gap-2">
           <div className="flex items-center gap-2 bg-black/70 border border-secondary-container/30 px-3 py-1.5 font-label text-[10px] uppercase tracking-widest backdrop-blur-md">
             <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse shadow-[0_0_6px_rgba(34,197,94,0.8)]" />
             {tr.live}

@@ -353,13 +353,12 @@ export default function AsteroidOrbit3D({ asteroids }) {
 
   return (
     <div className="relative w-full bg-black" style={{ height: '100%' }}>
-      {/* Mobile: allow vertical scroll to pass through to the page */}
-      <div className="absolute inset-0 z-[5] md:hidden" style={{ touchAction: 'pan-y' }} />
       <Canvas
         camera={{ position: [0, 3.5, 11], fov: 52 }}
         gl={{ antialias: true, alpha: false }}
         style={{ background: '#00010a', width: '100%', height: '100%' }}
         onPointerMissed={() => setSelected(null)}
+        onCreated={({ gl }) => { gl.domElement.style.touchAction = 'pan-y' }}
       >
         <Suspense fallback={null}>
           <Scene

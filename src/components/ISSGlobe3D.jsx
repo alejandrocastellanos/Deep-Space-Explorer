@@ -73,18 +73,6 @@ function Earth() {
   )
 }
 
-/* ── ISS orbit ring ── */
-function OrbitTrail() {
-  return (
-    <group rotation={[51.6 * (Math.PI / 180), 0, 0]}>
-      <mesh rotation={[Math.PI / 2, 0, 0]}>
-        <torusGeometry args={[ISS_ORBIT_R, 0.006, 8, 128]} />
-        <meshBasicMaterial color="#00f4fe" transparent opacity={0.18} />
-      </mesh>
-    </group>
-  )
-}
-
 /* ── ISS satellite marker ── */
 function ISSMarker({ position }) {
   const lightRef = useRef()
@@ -189,14 +177,11 @@ function SatGroup({ color, sats, onSelect }) {
 function Scene({ issPosition, satellites, onSelectSat }) {
   return (
     <>
-      <ambientLight intensity={0.12} color="#000d22" />
-      <directionalLight position={[8, 5, 6]}  intensity={2.0}  color="#f0f4ff" />
-      <directionalLight position={[-6, -3, -5]} intensity={0.25} color="#0033aa" />
+      <ambientLight intensity={2.5} color="#ffffff" />
 
       <Stars radius={90} depth={60} count={5000} factor={3} saturation={0.3} fade speed={0.4} />
 
       <Earth />
-      <OrbitTrail />
       <ISSMarker position={issPosition} />
 
       {satellites.length > 0 && (
@@ -247,13 +232,12 @@ export default function ISSGlobe3D({ issPosition, satellites, activeFilters, onT
 
   return (
     <div className="relative w-full" style={{ height: '100%' }}>
-      {/* Mobile: allow vertical scroll to pass through to the page */}
-      <div className="absolute inset-0 z-[5] md:hidden" style={{ touchAction: 'pan-y' }} />
       <Canvas
         camera={{ position: [0, 2.5, 7], fov: 50 }}
         gl={{ antialias: true, alpha: false }}
         style={{ background: '#00010a', width: '100%', height: '100%' }}
         onPointerMissed={() => setSelectedSat(null)}
+        onCreated={({ gl }) => { gl.domElement.style.touchAction = 'pan-y' }}
       >
         <Suspense fallback={null}>
           <Scene
